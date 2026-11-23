@@ -1,0 +1,1997 @@
+{
+  "indicators": [
+    "ISM_Manufacturing_PMI",
+    "Auto_Production_YoY_Pct",
+    "Vehicle_Inventory_Days",
+    "Raw_Material_Cost_Index",
+    "New_Vehicle_Orders_Index",
+    "Industrial_Util_Rate_Pct",
+    "Fuel_Price_Index",
+    "EV_Adoption_Index"
+  ],
+  "lags": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "family_best_drivers": {
+    "Brake & Safety Systems": {
+      "leading_indicator": "New_Vehicle_Orders_Index",
+      "optimal_lag_months": 0,
+      "correlation": 0.771
+    },
+    "Chassis & Structural": {
+      "leading_indicator": "New_Vehicle_Orders_Index",
+      "optimal_lag_months": 0,
+      "correlation": 0.816
+    },
+    "Electrical Assemblies": {
+      "leading_indicator": "New_Vehicle_Orders_Index",
+      "optimal_lag_months": 1,
+      "correlation": 0.925
+    },
+    "Hydraulic Systems": {
+      "leading_indicator": "New_Vehicle_Orders_Index",
+      "optimal_lag_months": 1,
+      "correlation": 0.93
+    },
+    "Powertrain Components": {
+      "leading_indicator": "New_Vehicle_Orders_Index",
+      "optimal_lag_months": 1,
+      "correlation": 0.865
+    },
+    "Precision Machined Parts": {
+      "leading_indicator": "New_Vehicle_Orders_Index",
+      "optimal_lag_months": 1,
+      "correlation": 0.875
+    },
+    "Thermal Management": {
+      "leading_indicator": "New_Vehicle_Orders_Index",
+      "optimal_lag_months": 0,
+      "correlation": 0.874
+    }
+  },
+  "heatmap": {
+    "Brake & Safety Systems": {
+      "ISM_Manufacturing_PMI": {
+        "0": 0.454,
+        "1": 0.453,
+        "2": 0.406,
+        "3": 0.327,
+        "4": 0.255,
+        "5": 0.187,
+        "6": 0.12
+      },
+      "Auto_Production_YoY_Pct": {
+        "0": 0.69,
+        "1": 0.665,
+        "2": 0.537,
+        "3": 0.401,
+        "4": 0.275,
+        "5": 0.152,
+        "6": 0.048
+      },
+      "Vehicle_Inventory_Days": {
+        "0": -0.147,
+        "1": -0.169,
+        "2": -0.179,
+        "3": -0.165,
+        "4": -0.145,
+        "5": -0.12,
+        "6": -0.097
+      },
+      "Raw_Material_Cost_Index": {
+        "0": 0.339,
+        "1": 0.268,
+        "2": 0.181,
+        "3": 0.075,
+        "4": -0.035,
+        "5": -0.106,
+        "6": -0.148
+      },
+      "New_Vehicle_Orders_Index": {
+        "0": 0.771,
+        "1": 0.733,
+        "2": 0.48,
+        "3": 0.238,
+        "4": 0.066,
+        "5": -0.059,
+        "6": -0.152
+      },
+      "Industrial_Util_Rate_Pct": {
+        "0": 0.048,
+        "1": -0.008,
+        "2": -0.092,
+        "3": -0.169,
+        "4": -0.24,
+        "5": -0.284,
+        "6": -0.332
+      },
+      "Fuel_Price_Index": {
+        "0": 0.253,
+        "1": 0.197,
+        "2": 0.081,
+        "3": -0.031,
+        "4": -0.134,
+        "5": -0.199,
+        "6": -0.23
+      },
+      "EV_Adoption_Index": {
+        "0": 0.756,
+        "1": 0.749,
+        "2": 0.746,
+        "3": 0.741,
+        "4": 0.737,
+        "5": 0.731,
+        "6": 0.721
+      }
+    },
+    "Chassis & Structural": {
+      "ISM_Manufacturing_PMI": {
+        "0": 0.42,
+        "1": 0.441,
+        "2": 0.419,
+        "3": 0.368,
+        "4": 0.321,
+        "5": 0.266,
+        "6": 0.199
+      },
+      "Auto_Production_YoY_Pct": {
+        "0": 0.649,
+        "1": 0.665,
+        "2": 0.613,
+        "3": 0.549,
+        "4": 0.469,
+        "5": 0.365,
+        "6": 0.258
+      },
+      "Vehicle_Inventory_Days": {
+        "0": -0.043,
+        "1": -0.058,
+        "2": -0.066,
+        "3": -0.06,
+        "4": -0.058,
+        "5": -0.047,
+        "6": -0.041
+      },
+      "Raw_Material_Cost_Index": {
+        "0": 0.374,
+        "1": 0.312,
+        "2": 0.226,
+        "3": 0.115,
+        "4": -0.002,
+        "5": -0.083,
+        "6": -0.146
+      },
+      "New_Vehicle_Orders_Index": {
+        "0": 0.816,
+        "1": 0.786,
+        "2": 0.567,
+        "3": 0.379,
+        "4": 0.231,
+        "5": 0.099,
+        "6": -0.019
+      },
+      "Industrial_Util_Rate_Pct": {
+        "0": 0.182,
+        "1": 0.134,
+        "2": 0.061,
+        "3": -0.005,
+        "4": -0.072,
+        "5": -0.134,
+        "6": -0.199
+      },
+      "Fuel_Price_Index": {
+        "0": 0.31,
+        "1": 0.273,
+        "2": 0.175,
+        "3": 0.076,
+        "4": -0.029,
+        "5": -0.105,
+        "6": -0.167
+      },
+      "EV_Adoption_Index": {
+        "0": 0.752,
+        "1": 0.753,
+        "2": 0.759,
+        "3": 0.768,
+        "4": 0.777,
+        "5": 0.783,
+        "6": 0.784
+      }
+    },
+    "Electrical Assemblies": {
+      "ISM_Manufacturing_PMI": {
+        "0": 0.697,
+        "1": 0.723,
+        "2": 0.714,
+        "3": 0.675,
+        "4": 0.617,
+        "5": 0.534,
+        "6": 0.445
+      },
+      "Auto_Production_YoY_Pct": {
+        "0": 0.417,
+        "1": 0.534,
+        "2": 0.568,
+        "3": 0.523,
+        "4": 0.446,
+        "5": 0.357,
+        "6": 0.26
+      },
+      "Vehicle_Inventory_Days": {
+        "0": -0.357,
+        "1": -0.363,
+        "2": -0.358,
+        "3": -0.346,
+        "4": -0.332,
+        "5": -0.303,
+        "6": -0.271
+      },
+      "Raw_Material_Cost_Index": {
+        "0": 0.678,
+        "1": 0.655,
+        "2": 0.597,
+        "3": 0.508,
+        "4": 0.407,
+        "5": 0.31,
+        "6": 0.213
+      },
+      "New_Vehicle_Orders_Index": {
+        "0": 0.884,
+        "1": 0.925,
+        "2": 0.859,
+        "3": 0.745,
+        "4": 0.57,
+        "5": 0.408,
+        "6": 0.283
+      },
+      "Industrial_Util_Rate_Pct": {
+        "0": 0.213,
+        "1": 0.153,
+        "2": 0.079,
+        "3": -0.015,
+        "4": -0.125,
+        "5": -0.23,
+        "6": -0.333
+      },
+      "Fuel_Price_Index": {
+        "0": 0.516,
+        "1": 0.476,
+        "2": 0.401,
+        "3": 0.3,
+        "4": 0.164,
+        "5": 0.041,
+        "6": -0.074
+      },
+      "EV_Adoption_Index": {
+        "0": 0.828,
+        "1": 0.823,
+        "2": 0.822,
+        "3": 0.822,
+        "4": 0.82,
+        "5": 0.814,
+        "6": 0.807
+      }
+    },
+    "Hydraulic Systems": {
+      "ISM_Manufacturing_PMI": {
+        "0": 0.739,
+        "1": 0.771,
+        "2": 0.755,
+        "3": 0.703,
+        "4": 0.638,
+        "5": 0.556,
+        "6": 0.465
+      },
+      "Auto_Production_YoY_Pct": {
+        "0": 0.439,
+        "1": 0.502,
+        "2": 0.492,
+        "3": 0.444,
+        "4": 0.369,
+        "5": 0.285,
+        "6": 0.2
+      },
+      "Vehicle_Inventory_Days": {
+        "0": -0.424,
+        "1": -0.428,
+        "2": -0.427,
+        "3": -0.406,
+        "4": -0.383,
+        "5": -0.343,
+        "6": -0.299
+      },
+      "Raw_Material_Cost_Index": {
+        "0": 0.677,
+        "1": 0.663,
+        "2": 0.619,
+        "3": 0.539,
+        "4": 0.446,
+        "5": 0.36,
+        "6": 0.278
+      },
+      "New_Vehicle_Orders_Index": {
+        "0": 0.889,
+        "1": 0.93,
+        "2": 0.817,
+        "3": 0.682,
+        "4": 0.554,
+        "5": 0.427,
+        "6": 0.319
+      },
+      "Industrial_Util_Rate_Pct": {
+        "0": 0.253,
+        "1": 0.191,
+        "2": 0.102,
+        "3": -0.004,
+        "4": -0.117,
+        "5": -0.224,
+        "6": -0.331
+      },
+      "Fuel_Price_Index": {
+        "0": 0.541,
+        "1": 0.493,
+        "2": 0.395,
+        "3": 0.277,
+        "4": 0.145,
+        "5": 0.023,
+        "6": -0.092
+      },
+      "EV_Adoption_Index": {
+        "0": 0.63,
+        "1": 0.623,
+        "2": 0.626,
+        "3": 0.624,
+        "4": 0.623,
+        "5": 0.621,
+        "6": 0.619
+      }
+    },
+    "Powertrain Components": {
+      "ISM_Manufacturing_PMI": {
+        "0": 0.582,
+        "1": 0.629,
+        "2": 0.637,
+        "3": 0.622,
+        "4": 0.6,
+        "5": 0.551,
+        "6": 0.481
+      },
+      "Auto_Production_YoY_Pct": {
+        "0": 0.369,
+        "1": 0.494,
+        "2": 0.58,
+        "3": 0.617,
+        "4": 0.576,
+        "5": 0.479,
+        "6": 0.368
+      },
+      "Vehicle_Inventory_Days": {
+        "0": -0.238,
+        "1": -0.249,
+        "2": -0.26,
+        "3": -0.261,
+        "4": -0.268,
+        "5": -0.269,
+        "6": -0.268
+      },
+      "Raw_Material_Cost_Index": {
+        "0": 0.607,
+        "1": 0.601,
+        "2": 0.562,
+        "3": 0.481,
+        "4": 0.388,
+        "5": 0.303,
+        "6": 0.216
+      },
+      "New_Vehicle_Orders_Index": {
+        "0": 0.819,
+        "1": 0.865,
+        "2": 0.801,
+        "3": 0.742,
+        "4": 0.65,
+        "5": 0.495,
+        "6": 0.319
+      },
+      "Industrial_Util_Rate_Pct": {
+        "0": 0.293,
+        "1": 0.239,
+        "2": 0.172,
+        "3": 0.092,
+        "4": 0.008,
+        "5": -0.089,
+        "6": -0.2
+      },
+      "Fuel_Price_Index": {
+        "0": 0.511,
+        "1": 0.496,
+        "2": 0.445,
+        "3": 0.379,
+        "4": 0.287,
+        "5": 0.188,
+        "6": 0.074
+      },
+      "EV_Adoption_Index": {
+        "0": 0.549,
+        "1": 0.546,
+        "2": 0.548,
+        "3": 0.554,
+        "4": 0.564,
+        "5": 0.571,
+        "6": 0.569
+      }
+    },
+    "Precision Machined Parts": {
+      "ISM_Manufacturing_PMI": {
+        "0": 0.632,
+        "1": 0.67,
+        "2": 0.66,
+        "3": 0.615,
+        "4": 0.557,
+        "5": 0.484,
+        "6": 0.401
+      },
+      "Auto_Production_YoY_Pct": {
+        "0": 0.56,
+        "1": 0.64,
+        "2": 0.628,
+        "3": 0.544,
+        "4": 0.429,
+        "5": 0.304,
+        "6": 0.186
+      },
+      "Vehicle_Inventory_Days": {
+        "0": -0.242,
+        "1": -0.266,
+        "2": -0.282,
+        "3": -0.285,
+        "4": -0.287,
+        "5": -0.27,
+        "6": -0.248
+      },
+      "Raw_Material_Cost_Index": {
+        "0": 0.524,
+        "1": 0.506,
+        "2": 0.452,
+        "3": 0.369,
+        "4": 0.281,
+        "5": 0.205,
+        "6": 0.139
+      },
+      "New_Vehicle_Orders_Index": {
+        "0": 0.854,
+        "1": 0.875,
+        "2": 0.751,
+        "3": 0.601,
+        "4": 0.431,
+        "5": 0.278,
+        "6": 0.154
+      },
+      "Industrial_Util_Rate_Pct": {
+        "0": 0.284,
+        "1": 0.228,
+        "2": 0.15,
+        "3": 0.046,
+        "4": -0.06,
+        "5": -0.159,
+        "6": -0.257
+      },
+      "Fuel_Price_Index": {
+        "0": 0.504,
+        "1": 0.468,
+        "2": 0.384,
+        "3": 0.279,
+        "4": 0.153,
+        "5": 0.045,
+        "6": -0.054
+      },
+      "EV_Adoption_Index": {
+        "0": 0.616,
+        "1": 0.612,
+        "2": 0.613,
+        "3": 0.623,
+        "4": 0.63,
+        "5": 0.633,
+        "6": 0.64
+      }
+    },
+    "Thermal Management": {
+      "ISM_Manufacturing_PMI": {
+        "0": 0.558,
+        "1": 0.56,
+        "2": 0.511,
+        "3": 0.431,
+        "4": 0.347,
+        "5": 0.253,
+        "6": 0.161
+      },
+      "Auto_Production_YoY_Pct": {
+        "0": 0.653,
+        "1": 0.676,
+        "2": 0.61,
+        "3": 0.5,
+        "4": 0.375,
+        "5": 0.246,
+        "6": 0.131
+      },
+      "Vehicle_Inventory_Days": {
+        "0": -0.201,
+        "1": -0.206,
+        "2": -0.199,
+        "3": -0.177,
+        "4": -0.151,
+        "5": -0.111,
+        "6": -0.067
+      },
+      "Raw_Material_Cost_Index": {
+        "0": 0.458,
+        "1": 0.391,
+        "2": 0.299,
+        "3": 0.181,
+        "4": 0.058,
+        "5": -0.039,
+        "6": -0.117
+      },
+      "New_Vehicle_Orders_Index": {
+        "0": 0.874,
+        "1": 0.844,
+        "2": 0.635,
+        "3": 0.427,
+        "4": 0.234,
+        "5": 0.072,
+        "6": -0.054
+      },
+      "Industrial_Util_Rate_Pct": {
+        "0": 0.121,
+        "1": 0.057,
+        "2": -0.029,
+        "3": -0.121,
+        "4": -0.213,
+        "5": -0.287,
+        "6": -0.359
+      },
+      "Fuel_Price_Index": {
+        "0": 0.301,
+        "1": 0.235,
+        "2": 0.118,
+        "3": -0.006,
+        "4": -0.137,
+        "5": -0.24,
+        "6": -0.316
+      },
+      "EV_Adoption_Index": {
+        "0": 0.393,
+        "1": 0.388,
+        "2": 0.391,
+        "3": 0.405,
+        "4": 0.42,
+        "5": 0.433,
+        "6": 0.436
+      }
+    }
+  },
+  "lag_stability": [
+    {
+      "Product_Family": "Brake & Safety Systems",
+      "Indicator": "ISM_Manufacturing_PMI",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.454,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.556,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.41,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Brake & Safety Systems",
+      "Indicator": "Auto_Production_YoY_Pct",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.69,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.782,
+      "Late_2023_2026_Lag": 3,
+      "Late_Corr": 0.478,
+      "Lag_Shift_Months": 3,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Brake & Safety Systems",
+      "Indicator": "Raw_Material_Cost_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.339,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.435,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.727,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Brake & Safety Systems",
+      "Indicator": "New_Vehicle_Orders_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.771,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.858,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.529,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Brake & Safety Systems",
+      "Indicator": "Industrial_Util_Rate_Pct",
+      "Full_Best_Lag": 6,
+      "Full_Corr": -0.332,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": -0.412,
+      "Late_2023_2026_Lag": 6,
+      "Late_Corr": 0.58,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Brake & Safety Systems",
+      "Indicator": "EV_Adoption_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.756,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.486,
+      "Late_2023_2026_Lag": 3,
+      "Late_Corr": 0.383,
+      "Lag_Shift_Months": 3,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Chassis & Structural",
+      "Indicator": "ISM_Manufacturing_PMI",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.441,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.569,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.155,
+      "Lag_Shift_Months": -1,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Chassis & Structural",
+      "Indicator": "Auto_Production_YoY_Pct",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.665,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.7,
+      "Late_2023_2026_Lag": 3,
+      "Late_Corr": 0.722,
+      "Lag_Shift_Months": 2,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Chassis & Structural",
+      "Indicator": "Raw_Material_Cost_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.374,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.501,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.636,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Chassis & Structural",
+      "Indicator": "New_Vehicle_Orders_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.816,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.882,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.27,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Chassis & Structural",
+      "Indicator": "Fuel_Price_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.31,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.449,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.582,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Chassis & Structural",
+      "Indicator": "EV_Adoption_Index",
+      "Full_Best_Lag": 6,
+      "Full_Corr": 0.784,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": 0.254,
+      "Late_2023_2026_Lag": 4,
+      "Late_Corr": 0.897,
+      "Lag_Shift_Months": -2,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "ISM_Manufacturing_PMI",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.723,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.732,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.835,
+      "Lag_Shift_Months": -1,
+      "Stable": true
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "Auto_Production_YoY_Pct",
+      "Full_Best_Lag": 2,
+      "Full_Corr": 0.568,
+      "Early_2019_2022_Lag": 2,
+      "Early_Corr": 0.703,
+      "Late_2023_2026_Lag": 3,
+      "Late_Corr": 0.213,
+      "Lag_Shift_Months": 1,
+      "Stable": true
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "Vehicle_Inventory_Days",
+      "Full_Best_Lag": 1,
+      "Full_Corr": -0.363,
+      "Early_2019_2022_Lag": 4,
+      "Early_Corr": -0.486,
+      "Late_2023_2026_Lag": 6,
+      "Late_Corr": 0.399,
+      "Lag_Shift_Months": 2,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "Raw_Material_Cost_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.678,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.742,
+      "Late_2023_2026_Lag": 5,
+      "Late_Corr": 0.49,
+      "Lag_Shift_Months": 5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "New_Vehicle_Orders_Index",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.925,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.941,
+      "Late_2023_2026_Lag": 3,
+      "Late_Corr": 0.863,
+      "Lag_Shift_Months": 2,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "Industrial_Util_Rate_Pct",
+      "Full_Best_Lag": 6,
+      "Full_Corr": -0.333,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": -0.319,
+      "Late_2023_2026_Lag": 1,
+      "Late_Corr": 0.793,
+      "Lag_Shift_Months": -5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "Fuel_Price_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.516,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.585,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.202,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Electrical Assemblies",
+      "Indicator": "EV_Adoption_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.828,
+      "Early_2019_2022_Lag": 5,
+      "Early_Corr": 0.709,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.82,
+      "Lag_Shift_Months": -5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "ISM_Manufacturing_PMI",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.771,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.772,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.919,
+      "Lag_Shift_Months": -1,
+      "Stable": true
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "Auto_Production_YoY_Pct",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.502,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.655,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.134,
+      "Lag_Shift_Months": -1,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "Vehicle_Inventory_Days",
+      "Full_Best_Lag": 1,
+      "Full_Corr": -0.428,
+      "Early_2019_2022_Lag": 3,
+      "Early_Corr": -0.546,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.382,
+      "Lag_Shift_Months": -3,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "Raw_Material_Cost_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.677,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.747,
+      "Late_2023_2026_Lag": 5,
+      "Late_Corr": 0.559,
+      "Lag_Shift_Months": 5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "New_Vehicle_Orders_Index",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.93,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.961,
+      "Late_2023_2026_Lag": 4,
+      "Late_Corr": 0.876,
+      "Lag_Shift_Months": 3,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "Industrial_Util_Rate_Pct",
+      "Full_Best_Lag": 6,
+      "Full_Corr": -0.331,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": -0.339,
+      "Late_2023_2026_Lag": 1,
+      "Late_Corr": 0.742,
+      "Lag_Shift_Months": -5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "Fuel_Price_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.541,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.619,
+      "Late_2023_2026_Lag": 6,
+      "Late_Corr": -0.121,
+      "Lag_Shift_Months": 6,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Hydraulic Systems",
+      "Indicator": "EV_Adoption_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.63,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": 0.676,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.807,
+      "Lag_Shift_Months": -6,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Powertrain Components",
+      "Indicator": "ISM_Manufacturing_PMI",
+      "Full_Best_Lag": 2,
+      "Full_Corr": 0.637,
+      "Early_2019_2022_Lag": 2,
+      "Early_Corr": 0.688,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.499,
+      "Lag_Shift_Months": -2,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Powertrain Components",
+      "Indicator": "Auto_Production_YoY_Pct",
+      "Full_Best_Lag": 3,
+      "Full_Corr": 0.617,
+      "Early_2019_2022_Lag": 3,
+      "Early_Corr": 0.725,
+      "Late_2023_2026_Lag": 2,
+      "Late_Corr": 0.412,
+      "Lag_Shift_Months": -1,
+      "Stable": true
+    },
+    {
+      "Product_Family": "Powertrain Components",
+      "Indicator": "Raw_Material_Cost_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.607,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.677,
+      "Late_2023_2026_Lag": 5,
+      "Late_Corr": 0.458,
+      "Lag_Shift_Months": 5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Powertrain Components",
+      "Indicator": "New_Vehicle_Orders_Index",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.865,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.883,
+      "Late_2023_2026_Lag": 3,
+      "Late_Corr": 0.692,
+      "Lag_Shift_Months": 2,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Powertrain Components",
+      "Indicator": "Fuel_Price_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.511,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.616,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.495,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Powertrain Components",
+      "Indicator": "EV_Adoption_Index",
+      "Full_Best_Lag": 5,
+      "Full_Corr": 0.571,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": 0.503,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.431,
+      "Lag_Shift_Months": -6,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Precision Machined Parts",
+      "Indicator": "ISM_Manufacturing_PMI",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.67,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.688,
+      "Late_2023_2026_Lag": 1,
+      "Late_Corr": 0.745,
+      "Lag_Shift_Months": 0,
+      "Stable": true
+    },
+    {
+      "Product_Family": "Precision Machined Parts",
+      "Indicator": "Auto_Production_YoY_Pct",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.64,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.759,
+      "Late_2023_2026_Lag": 4,
+      "Late_Corr": 0.262,
+      "Lag_Shift_Months": 3,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Precision Machined Parts",
+      "Indicator": "Raw_Material_Cost_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.524,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.591,
+      "Late_2023_2026_Lag": 6,
+      "Late_Corr": 0.435,
+      "Lag_Shift_Months": 6,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Precision Machined Parts",
+      "Indicator": "New_Vehicle_Orders_Index",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.875,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.904,
+      "Late_2023_2026_Lag": 5,
+      "Late_Corr": 0.75,
+      "Lag_Shift_Months": 4,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Precision Machined Parts",
+      "Indicator": "Fuel_Price_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.504,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.6,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.307,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Precision Machined Parts",
+      "Indicator": "EV_Adoption_Index",
+      "Full_Best_Lag": 6,
+      "Full_Corr": 0.64,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": 0.57,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.578,
+      "Lag_Shift_Months": -6,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Thermal Management",
+      "Indicator": "ISM_Manufacturing_PMI",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.56,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.63,
+      "Late_2023_2026_Lag": 1,
+      "Late_Corr": 0.556,
+      "Lag_Shift_Months": 0,
+      "Stable": true
+    },
+    {
+      "Product_Family": "Thermal Management",
+      "Indicator": "Auto_Production_YoY_Pct",
+      "Full_Best_Lag": 1,
+      "Full_Corr": 0.676,
+      "Early_2019_2022_Lag": 1,
+      "Early_Corr": 0.742,
+      "Late_2023_2026_Lag": 4,
+      "Late_Corr": 0.464,
+      "Lag_Shift_Months": 3,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Thermal Management",
+      "Indicator": "Raw_Material_Cost_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.458,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.555,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": -0.349,
+      "Lag_Shift_Months": 0,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Thermal Management",
+      "Indicator": "New_Vehicle_Orders_Index",
+      "Full_Best_Lag": 0,
+      "Full_Corr": 0.874,
+      "Early_2019_2022_Lag": 0,
+      "Early_Corr": 0.915,
+      "Late_2023_2026_Lag": 5,
+      "Late_Corr": 0.598,
+      "Lag_Shift_Months": 5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Thermal Management",
+      "Indicator": "Industrial_Util_Rate_Pct",
+      "Full_Best_Lag": 6,
+      "Full_Corr": -0.359,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": -0.447,
+      "Late_2023_2026_Lag": 2,
+      "Late_Corr": 0.637,
+      "Lag_Shift_Months": -4,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Thermal Management",
+      "Indicator": "Fuel_Price_Index",
+      "Full_Best_Lag": 6,
+      "Full_Corr": -0.316,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": -0.486,
+      "Late_2023_2026_Lag": 1,
+      "Late_Corr": -0.53,
+      "Lag_Shift_Months": -5,
+      "Stable": false
+    },
+    {
+      "Product_Family": "Thermal Management",
+      "Indicator": "EV_Adoption_Index",
+      "Full_Best_Lag": 6,
+      "Full_Corr": 0.436,
+      "Early_2019_2022_Lag": 6,
+      "Early_Corr": 0.163,
+      "Late_2023_2026_Lag": 0,
+      "Late_Corr": 0.851,
+      "Lag_Shift_Months": -6,
+      "Stable": false
+    }
+  ],
+  "ev_shift_monthly": [
+    {
+      "Date": "2019-01",
+      "EV_Units": 0.0,
+      "ICE_Units": 23471.0,
+      "Universal_Units": 72717.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 24.4,
+      "EV_Adoption_Index": 40.0
+    },
+    {
+      "Date": "2019-02",
+      "EV_Units": 0.0,
+      "ICE_Units": 25473.0,
+      "Universal_Units": 79352.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 24.3,
+      "EV_Adoption_Index": 40.3
+    },
+    {
+      "Date": "2019-03",
+      "EV_Units": 0.0,
+      "ICE_Units": 31971.0,
+      "Universal_Units": 95373.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 25.11,
+      "EV_Adoption_Index": 40.8
+    },
+    {
+      "Date": "2019-04",
+      "EV_Units": 0.0,
+      "ICE_Units": 29796.0,
+      "Universal_Units": 92748.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 24.31,
+      "EV_Adoption_Index": 41.3
+    },
+    {
+      "Date": "2019-05",
+      "EV_Units": 0.0,
+      "ICE_Units": 31437.0,
+      "Universal_Units": 91790.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 25.51,
+      "EV_Adoption_Index": 42.1
+    },
+    {
+      "Date": "2019-06",
+      "EV_Units": 0.0,
+      "ICE_Units": 27157.0,
+      "Universal_Units": 85704.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 24.06,
+      "EV_Adoption_Index": 42.5
+    },
+    {
+      "Date": "2019-07",
+      "EV_Units": 0.0,
+      "ICE_Units": 26298.0,
+      "Universal_Units": 85126.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 23.6,
+      "EV_Adoption_Index": 43.0
+    },
+    {
+      "Date": "2019-08",
+      "EV_Units": 0.0,
+      "ICE_Units": 24118.0,
+      "Universal_Units": 76679.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 23.93,
+      "EV_Adoption_Index": 43.4
+    },
+    {
+      "Date": "2019-09",
+      "EV_Units": 0.0,
+      "ICE_Units": 27687.0,
+      "Universal_Units": 88949.0,
+      "EV_Share_Pct": 0.0,
+      "ICE_Share_Pct": 23.74,
+      "EV_Adoption_Index": 44.3
+    },
+    {
+      "Date": "2019-10",
+      "EV_Units": 8.0,
+      "ICE_Units": 26733.0,
+      "Universal_Units": 88646.0,
+      "EV_Share_Pct": 0.01,
+      "ICE_Share_Pct": 23.17,
+      "EV_Adoption_Index": 44.8
+    },
+    {
+      "Date": "2019-11",
+      "EV_Units": 8.0,
+      "ICE_Units": 26306.0,
+      "Universal_Units": 82012.0,
+      "EV_Share_Pct": 0.01,
+      "ICE_Share_Pct": 24.28,
+      "EV_Adoption_Index": 44.9
+    },
+    {
+      "Date": "2019-12",
+      "EV_Units": 20.0,
+      "ICE_Units": 22140.0,
+      "Universal_Units": 75300.0,
+      "EV_Share_Pct": 0.02,
+      "ICE_Share_Pct": 22.72,
+      "EV_Adoption_Index": 44.9
+    },
+    {
+      "Date": "2020-01",
+      "EV_Units": 34.0,
+      "ICE_Units": 22827.0,
+      "Universal_Units": 78673.0,
+      "EV_Share_Pct": 0.03,
+      "ICE_Share_Pct": 22.48,
+      "EV_Adoption_Index": 45.4
+    },
+    {
+      "Date": "2020-02",
+      "EV_Units": 54.0,
+      "ICE_Units": 22092.0,
+      "Universal_Units": 69634.0,
+      "EV_Share_Pct": 0.06,
+      "ICE_Share_Pct": 24.07,
+      "EV_Adoption_Index": 46.1
+    },
+    {
+      "Date": "2020-03",
+      "EV_Units": 83.0,
+      "ICE_Units": 24081.0,
+      "Universal_Units": 78053.0,
+      "EV_Share_Pct": 0.08,
+      "ICE_Share_Pct": 23.56,
+      "EV_Adoption_Index": 46.6
+    },
+    {
+      "Date": "2020-04",
+      "EV_Units": 43.0,
+      "ICE_Units": 10571.0,
+      "Universal_Units": 40642.0,
+      "EV_Share_Pct": 0.08,
+      "ICE_Share_Pct": 20.62,
+      "EV_Adoption_Index": 47.4
+    },
+    {
+      "Date": "2020-05",
+      "EV_Units": 97.0,
+      "ICE_Units": 13134.0,
+      "Universal_Units": 39976.0,
+      "EV_Share_Pct": 0.18,
+      "ICE_Share_Pct": 24.68,
+      "EV_Adoption_Index": 48.0
+    },
+    {
+      "Date": "2020-06",
+      "EV_Units": 125.0,
+      "ICE_Units": 14247.0,
+      "Universal_Units": 49458.0,
+      "EV_Share_Pct": 0.2,
+      "ICE_Share_Pct": 22.32,
+      "EV_Adoption_Index": 49.1
+    },
+    {
+      "Date": "2020-07",
+      "EV_Units": 164.0,
+      "ICE_Units": 16199.0,
+      "Universal_Units": 59690.0,
+      "EV_Share_Pct": 0.22,
+      "ICE_Share_Pct": 21.3,
+      "EV_Adoption_Index": 49.8
+    },
+    {
+      "Date": "2020-08",
+      "EV_Units": 231.0,
+      "ICE_Units": 16322.0,
+      "Universal_Units": 61491.0,
+      "EV_Share_Pct": 0.3,
+      "ICE_Share_Pct": 20.91,
+      "EV_Adoption_Index": 50.7
+    },
+    {
+      "Date": "2020-09",
+      "EV_Units": 436.0,
+      "ICE_Units": 22438.0,
+      "Universal_Units": 81043.0,
+      "EV_Share_Pct": 0.42,
+      "ICE_Share_Pct": 21.59,
+      "EV_Adoption_Index": 51.4
+    },
+    {
+      "Date": "2020-10",
+      "EV_Units": 650.0,
+      "ICE_Units": 23456.0,
+      "Universal_Units": 91286.0,
+      "EV_Share_Pct": 0.56,
+      "ICE_Share_Pct": 20.33,
+      "EV_Adoption_Index": 51.9
+    },
+    {
+      "Date": "2020-11",
+      "EV_Units": 766.0,
+      "ICE_Units": 25831.0,
+      "Universal_Units": 93694.0,
+      "EV_Share_Pct": 0.64,
+      "ICE_Share_Pct": 21.47,
+      "EV_Adoption_Index": 52.5
+    },
+    {
+      "Date": "2020-12",
+      "EV_Units": 775.0,
+      "ICE_Units": 23926.0,
+      "Universal_Units": 90062.0,
+      "EV_Share_Pct": 0.68,
+      "ICE_Share_Pct": 20.85,
+      "EV_Adoption_Index": 52.9
+    },
+    {
+      "Date": "2021-01",
+      "EV_Units": 1063.0,
+      "ICE_Units": 26982.0,
+      "Universal_Units": 99661.0,
+      "EV_Share_Pct": 0.83,
+      "ICE_Share_Pct": 21.13,
+      "EV_Adoption_Index": 53.5
+    },
+    {
+      "Date": "2021-02",
+      "EV_Units": 1136.0,
+      "ICE_Units": 25304.0,
+      "Universal_Units": 94384.0,
+      "EV_Share_Pct": 0.94,
+      "ICE_Share_Pct": 20.94,
+      "EV_Adoption_Index": 54.5
+    },
+    {
+      "Date": "2021-03",
+      "EV_Units": 1840.0,
+      "ICE_Units": 32182.0,
+      "Universal_Units": 113852.0,
+      "EV_Share_Pct": 1.24,
+      "ICE_Share_Pct": 21.76,
+      "EV_Adoption_Index": 55.2
+    },
+    {
+      "Date": "2021-04",
+      "EV_Units": 2107.0,
+      "ICE_Units": 29753.0,
+      "Universal_Units": 116685.0,
+      "EV_Share_Pct": 1.42,
+      "ICE_Share_Pct": 20.03,
+      "EV_Adoption_Index": 56.5
+    },
+    {
+      "Date": "2021-05",
+      "EV_Units": 2604.0,
+      "ICE_Units": 33613.0,
+      "Universal_Units": 118161.0,
+      "EV_Share_Pct": 1.69,
+      "ICE_Share_Pct": 21.77,
+      "EV_Adoption_Index": 57.6
+    },
+    {
+      "Date": "2021-06",
+      "EV_Units": 2413.0,
+      "ICE_Units": 28200.0,
+      "Universal_Units": 112858.0,
+      "EV_Share_Pct": 1.68,
+      "ICE_Share_Pct": 19.66,
+      "EV_Adoption_Index": 58.1
+    },
+    {
+      "Date": "2021-07",
+      "EV_Units": 2785.0,
+      "ICE_Units": 29370.0,
+      "Universal_Units": 111874.0,
+      "EV_Share_Pct": 1.93,
+      "ICE_Share_Pct": 20.39,
+      "EV_Adoption_Index": 58.2
+    },
+    {
+      "Date": "2021-08",
+      "EV_Units": 2411.0,
+      "ICE_Units": 25168.0,
+      "Universal_Units": 92656.0,
+      "EV_Share_Pct": 2.01,
+      "ICE_Share_Pct": 20.93,
+      "EV_Adoption_Index": 59.5
+    },
+    {
+      "Date": "2021-09",
+      "EV_Units": 2519.0,
+      "ICE_Units": 25079.0,
+      "Universal_Units": 103201.0,
+      "EV_Share_Pct": 1.93,
+      "ICE_Share_Pct": 19.17,
+      "EV_Adoption_Index": 60.6
+    },
+    {
+      "Date": "2021-10",
+      "EV_Units": 2993.0,
+      "ICE_Units": 23284.0,
+      "Universal_Units": 97005.0,
+      "EV_Share_Pct": 2.43,
+      "ICE_Share_Pct": 18.89,
+      "EV_Adoption_Index": 61.3
+    },
+    {
+      "Date": "2021-11",
+      "EV_Units": 2647.0,
+      "ICE_Units": 22509.0,
+      "Universal_Units": 89518.0,
+      "EV_Share_Pct": 2.31,
+      "ICE_Share_Pct": 19.63,
+      "EV_Adoption_Index": 62.3
+    },
+    {
+      "Date": "2021-12",
+      "EV_Units": 2430.0,
+      "ICE_Units": 18447.0,
+      "Universal_Units": 79037.0,
+      "EV_Share_Pct": 2.43,
+      "ICE_Share_Pct": 18.46,
+      "EV_Adoption_Index": 63.2
+    },
+    {
+      "Date": "2022-01",
+      "EV_Units": 2828.0,
+      "ICE_Units": 21605.0,
+      "Universal_Units": 90199.0,
+      "EV_Share_Pct": 2.47,
+      "ICE_Share_Pct": 18.85,
+      "EV_Adoption_Index": 63.7
+    },
+    {
+      "Date": "2022-02",
+      "EV_Units": 3066.0,
+      "ICE_Units": 20647.0,
+      "Universal_Units": 84473.0,
+      "EV_Share_Pct": 2.83,
+      "ICE_Share_Pct": 19.08,
+      "EV_Adoption_Index": 64.7
+    },
+    {
+      "Date": "2022-03",
+      "EV_Units": 3326.0,
+      "ICE_Units": 23978.0,
+      "Universal_Units": 99841.0,
+      "EV_Share_Pct": 2.62,
+      "ICE_Share_Pct": 18.86,
+      "EV_Adoption_Index": 65.8
+    },
+    {
+      "Date": "2022-04",
+      "EV_Units": 3572.0,
+      "ICE_Units": 23560.0,
+      "Universal_Units": 97075.0,
+      "EV_Share_Pct": 2.88,
+      "ICE_Share_Pct": 18.97,
+      "EV_Adoption_Index": 66.3
+    },
+    {
+      "Date": "2022-05",
+      "EV_Units": 3822.0,
+      "ICE_Units": 24968.0,
+      "Universal_Units": 99484.0,
+      "EV_Share_Pct": 2.98,
+      "ICE_Share_Pct": 19.46,
+      "EV_Adoption_Index": 67.4
+    },
+    {
+      "Date": "2022-06",
+      "EV_Units": 3496.0,
+      "ICE_Units": 21608.0,
+      "Universal_Units": 91948.0,
+      "EV_Share_Pct": 2.99,
+      "ICE_Share_Pct": 18.46,
+      "EV_Adoption_Index": 68.6
+    },
+    {
+      "Date": "2022-07",
+      "EV_Units": 4088.0,
+      "ICE_Units": 21585.0,
+      "Universal_Units": 92714.0,
+      "EV_Share_Pct": 3.45,
+      "ICE_Share_Pct": 18.23,
+      "EV_Adoption_Index": 69.3
+    },
+    {
+      "Date": "2022-08",
+      "EV_Units": 4021.0,
+      "ICE_Units": 20868.0,
+      "Universal_Units": 87539.0,
+      "EV_Share_Pct": 3.58,
+      "ICE_Share_Pct": 18.56,
+      "EV_Adoption_Index": 70.2
+    },
+    {
+      "Date": "2022-09",
+      "EV_Units": 4610.0,
+      "ICE_Units": 24327.0,
+      "Universal_Units": 106687.0,
+      "EV_Share_Pct": 3.4,
+      "ICE_Share_Pct": 17.94,
+      "EV_Adoption_Index": 71.1
+    },
+    {
+      "Date": "2022-10",
+      "EV_Units": 5222.0,
+      "ICE_Units": 23329.0,
+      "Universal_Units": 104364.0,
+      "EV_Share_Pct": 3.93,
+      "ICE_Share_Pct": 17.55,
+      "EV_Adoption_Index": 72.1
+    },
+    {
+      "Date": "2022-11",
+      "EV_Units": 5195.0,
+      "ICE_Units": 23126.0,
+      "Universal_Units": 104266.0,
+      "EV_Share_Pct": 3.92,
+      "ICE_Share_Pct": 17.44,
+      "EV_Adoption_Index": 73.1
+    },
+    {
+      "Date": "2022-12",
+      "EV_Units": 5973.0,
+      "ICE_Units": 23940.0,
+      "Universal_Units": 108239.0,
+      "EV_Share_Pct": 4.32,
+      "ICE_Share_Pct": 17.33,
+      "EV_Adoption_Index": 74.4
+    },
+    {
+      "Date": "2023-01",
+      "EV_Units": 5110.0,
+      "ICE_Units": 17708.0,
+      "Universal_Units": 89679.0,
+      "EV_Share_Pct": 4.54,
+      "ICE_Share_Pct": 15.74,
+      "EV_Adoption_Index": 75.2
+    },
+    {
+      "Date": "2023-02",
+      "EV_Units": 5681.0,
+      "ICE_Units": 18239.0,
+      "Universal_Units": 89675.0,
+      "EV_Share_Pct": 5.0,
+      "ICE_Share_Pct": 16.06,
+      "EV_Adoption_Index": 76.3
+    },
+    {
+      "Date": "2023-03",
+      "EV_Units": 6448.0,
+      "ICE_Units": 21802.0,
+      "Universal_Units": 102744.0,
+      "EV_Share_Pct": 4.92,
+      "ICE_Share_Pct": 16.64,
+      "EV_Adoption_Index": 77.1
+    },
+    {
+      "Date": "2023-04",
+      "EV_Units": 6457.0,
+      "ICE_Units": 21108.0,
+      "Universal_Units": 101823.0,
+      "EV_Share_Pct": 4.99,
+      "ICE_Share_Pct": 16.31,
+      "EV_Adoption_Index": 77.8
+    },
+    {
+      "Date": "2023-05",
+      "EV_Units": 6878.0,
+      "ICE_Units": 22417.0,
+      "Universal_Units": 104796.0,
+      "EV_Share_Pct": 5.13,
+      "ICE_Share_Pct": 16.72,
+      "EV_Adoption_Index": 78.4
+    },
+    {
+      "Date": "2023-06",
+      "EV_Units": 7553.0,
+      "ICE_Units": 20730.0,
+      "Universal_Units": 102835.0,
+      "EV_Share_Pct": 5.76,
+      "ICE_Share_Pct": 15.81,
+      "EV_Adoption_Index": 79.5
+    },
+    {
+      "Date": "2023-07",
+      "EV_Units": 8252.0,
+      "ICE_Units": 20702.0,
+      "Universal_Units": 103047.0,
+      "EV_Share_Pct": 6.25,
+      "ICE_Share_Pct": 15.68,
+      "EV_Adoption_Index": 80.4
+    },
+    {
+      "Date": "2023-08",
+      "EV_Units": 7607.0,
+      "ICE_Units": 18247.0,
+      "Universal_Units": 93268.0,
+      "EV_Share_Pct": 6.39,
+      "ICE_Share_Pct": 15.32,
+      "EV_Adoption_Index": 81.0
+    },
+    {
+      "Date": "2023-09",
+      "EV_Units": 8527.0,
+      "ICE_Units": 20992.0,
+      "Universal_Units": 108864.0,
+      "EV_Share_Pct": 6.16,
+      "ICE_Share_Pct": 15.17,
+      "EV_Adoption_Index": 81.6
+    },
+    {
+      "Date": "2023-10",
+      "EV_Units": 9818.0,
+      "ICE_Units": 19601.0,
+      "Universal_Units": 104662.0,
+      "EV_Share_Pct": 7.32,
+      "ICE_Share_Pct": 14.62,
+      "EV_Adoption_Index": 82.8
+    },
+    {
+      "Date": "2023-11",
+      "EV_Units": 9122.0,
+      "ICE_Units": 19816.0,
+      "Universal_Units": 100992.0,
+      "EV_Share_Pct": 7.02,
+      "ICE_Share_Pct": 15.25,
+      "EV_Adoption_Index": 83.5
+    },
+    {
+      "Date": "2023-12",
+      "EV_Units": 9648.0,
+      "ICE_Units": 17671.0,
+      "Universal_Units": 93105.0,
+      "EV_Share_Pct": 8.01,
+      "ICE_Share_Pct": 14.67,
+      "EV_Adoption_Index": 84.4
+    },
+    {
+      "Date": "2024-01",
+      "EV_Units": 9262.0,
+      "ICE_Units": 17565.0,
+      "Universal_Units": 98684.0,
+      "EV_Share_Pct": 7.38,
+      "ICE_Share_Pct": 13.99,
+      "EV_Adoption_Index": 85.0
+    },
+    {
+      "Date": "2024-02",
+      "EV_Units": 10138.0,
+      "ICE_Units": 17823.0,
+      "Universal_Units": 94113.0,
+      "EV_Share_Pct": 8.3,
+      "ICE_Share_Pct": 14.6,
+      "EV_Adoption_Index": 86.2
+    },
+    {
+      "Date": "2024-03",
+      "EV_Units": 12043.0,
+      "ICE_Units": 21398.0,
+      "Universal_Units": 112543.0,
+      "EV_Share_Pct": 8.25,
+      "ICE_Share_Pct": 14.66,
+      "EV_Adoption_Index": 86.2
+    },
+    {
+      "Date": "2024-04",
+      "EV_Units": 12336.0,
+      "ICE_Units": 20202.0,
+      "Universal_Units": 110584.0,
+      "EV_Share_Pct": 8.62,
+      "ICE_Share_Pct": 14.12,
+      "EV_Adoption_Index": 86.4
+    },
+    {
+      "Date": "2024-05",
+      "EV_Units": 12518.0,
+      "ICE_Units": 22641.0,
+      "Universal_Units": 113407.0,
+      "EV_Share_Pct": 8.43,
+      "ICE_Share_Pct": 15.24,
+      "EV_Adoption_Index": 86.2
+    },
+    {
+      "Date": "2024-06",
+      "EV_Units": 12835.0,
+      "ICE_Units": 19367.0,
+      "Universal_Units": 108403.0,
+      "EV_Share_Pct": 9.13,
+      "ICE_Share_Pct": 13.77,
+      "EV_Adoption_Index": 87.7
+    },
+    {
+      "Date": "2024-07",
+      "EV_Units": 13054.0,
+      "ICE_Units": 20246.0,
+      "Universal_Units": 111510.0,
+      "EV_Share_Pct": 9.01,
+      "ICE_Share_Pct": 13.98,
+      "EV_Adoption_Index": 89.0
+    },
+    {
+      "Date": "2024-08",
+      "EV_Units": 12679.0,
+      "ICE_Units": 18698.0,
+      "Universal_Units": 101664.0,
+      "EV_Share_Pct": 9.53,
+      "ICE_Share_Pct": 14.05,
+      "EV_Adoption_Index": 90.3
+    },
+    {
+      "Date": "2024-09",
+      "EV_Units": 15996.0,
+      "ICE_Units": 22342.0,
+      "Universal_Units": 122077.0,
+      "EV_Share_Pct": 9.97,
+      "ICE_Share_Pct": 13.93,
+      "EV_Adoption_Index": 91.0
+    },
+    {
+      "Date": "2024-10",
+      "EV_Units": 16617.0,
+      "ICE_Units": 20638.0,
+      "Universal_Units": 124797.0,
+      "EV_Share_Pct": 10.25,
+      "ICE_Share_Pct": 12.74,
+      "EV_Adoption_Index": 91.7
+    },
+    {
+      "Date": "2024-11",
+      "EV_Units": 15474.0,
+      "ICE_Units": 20525.0,
+      "Universal_Units": 117140.0,
+      "EV_Share_Pct": 10.1,
+      "ICE_Share_Pct": 13.4,
+      "EV_Adoption_Index": 92.0
+    },
+    {
+      "Date": "2024-12",
+      "EV_Units": 15846.0,
+      "ICE_Units": 17401.0,
+      "Universal_Units": 106340.0,
+      "EV_Share_Pct": 11.35,
+      "ICE_Share_Pct": 12.47,
+      "EV_Adoption_Index": 92.3
+    },
+    {
+      "Date": "2025-01",
+      "EV_Units": 14735.0,
+      "ICE_Units": 18568.0,
+      "Universal_Units": 113461.0,
+      "EV_Share_Pct": 10.04,
+      "ICE_Share_Pct": 12.65,
+      "EV_Adoption_Index": 91.9
+    },
+    {
+      "Date": "2025-02",
+      "EV_Units": 14284.0,
+      "ICE_Units": 17894.0,
+      "Universal_Units": 108814.0,
+      "EV_Share_Pct": 10.13,
+      "ICE_Share_Pct": 12.69,
+      "EV_Adoption_Index": 91.6
+    },
+    {
+      "Date": "2025-03",
+      "EV_Units": 15581.0,
+      "ICE_Units": 20317.0,
+      "Universal_Units": 119270.0,
+      "EV_Share_Pct": 10.04,
+      "ICE_Share_Pct": 13.09,
+      "EV_Adoption_Index": 91.3
+    },
+    {
+      "Date": "2025-04",
+      "EV_Units": 15439.0,
+      "ICE_Units": 19592.0,
+      "Universal_Units": 119346.0,
+      "EV_Share_Pct": 10.0,
+      "ICE_Share_Pct": 12.69,
+      "EV_Adoption_Index": 90.8
+    },
+    {
+      "Date": "2025-05",
+      "EV_Units": 15052.0,
+      "ICE_Units": 20956.0,
+      "Universal_Units": 117219.0,
+      "EV_Share_Pct": 9.82,
+      "ICE_Share_Pct": 13.68,
+      "EV_Adoption_Index": 91.0
+    },
+    {
+      "Date": "2025-06",
+      "EV_Units": 13898.0,
+      "ICE_Units": 17205.0,
+      "Universal_Units": 106263.0,
+      "EV_Share_Pct": 10.12,
+      "ICE_Share_Pct": 12.52,
+      "EV_Adoption_Index": 90.6
+    },
+    {
+      "Date": "2025-07",
+      "EV_Units": 14027.0,
+      "ICE_Units": 17957.0,
+      "Universal_Units": 103283.0,
+      "EV_Share_Pct": 10.37,
+      "ICE_Share_Pct": 13.28,
+      "EV_Adoption_Index": 90.3
+    },
+    {
+      "Date": "2025-08",
+      "EV_Units": 11952.0,
+      "ICE_Units": 15702.0,
+      "Universal_Units": 96938.0,
+      "EV_Share_Pct": 9.59,
+      "ICE_Share_Pct": 12.6,
+      "EV_Adoption_Index": 90.0
+    },
+    {
+      "Date": "2025-09",
+      "EV_Units": 13982.0,
+      "ICE_Units": 19532.0,
+      "Universal_Units": 109884.0,
+      "EV_Share_Pct": 9.75,
+      "ICE_Share_Pct": 13.62,
+      "EV_Adoption_Index": 90.2
+    },
+    {
+      "Date": "2025-10",
+      "EV_Units": 13670.0,
+      "ICE_Units": 18105.0,
+      "Universal_Units": 109242.0,
+      "EV_Share_Pct": 9.69,
+      "ICE_Share_Pct": 12.84,
+      "EV_Adoption_Index": 89.8
+    },
+    {
+      "Date": "2025-11",
+      "EV_Units": 13100.0,
+      "ICE_Units": 18598.0,
+      "Universal_Units": 104289.0,
+      "EV_Share_Pct": 9.63,
+      "ICE_Share_Pct": 13.68,
+      "EV_Adoption_Index": 89.5
+    },
+    {
+      "Date": "2025-12",
+      "EV_Units": 12223.0,
+      "ICE_Units": 16083.0,
+      "Universal_Units": 93597.0,
+      "EV_Share_Pct": 10.03,
+      "ICE_Share_Pct": 13.19,
+      "EV_Adoption_Index": 89.6
+    },
+    {
+      "Date": "2026-01",
+      "EV_Units": 11553.0,
+      "ICE_Units": 16859.0,
+      "Universal_Units": 100543.0,
+      "EV_Share_Pct": 8.96,
+      "ICE_Share_Pct": 13.07,
+      "EV_Adoption_Index": 88.9
+    },
+    {
+      "Date": "2026-02",
+      "EV_Units": 11526.0,
+      "ICE_Units": 16265.0,
+      "Universal_Units": 94573.0,
+      "EV_Share_Pct": 9.42,
+      "ICE_Share_Pct": 13.29,
+      "EV_Adoption_Index": 88.7
+    },
+    {
+      "Date": "2026-03",
+      "EV_Units": 13238.0,
+      "ICE_Units": 19504.0,
+      "Universal_Units": 109604.0,
+      "EV_Share_Pct": 9.3,
+      "ICE_Share_Pct": 13.7,
+      "EV_Adoption_Index": 89.0
+    },
+    {
+      "Date": "2026-04",
+      "EV_Units": 14340.0,
+      "ICE_Units": 18966.0,
+      "Universal_Units": 116184.0,
+      "EV_Share_Pct": 9.59,
+      "ICE_Share_Pct": 12.69,
+      "EV_Adoption_Index": 89.7
+    },
+    {
+      "Date": "2026-05",
+      "EV_Units": 15003.0,
+      "ICE_Units": 20989.0,
+      "Universal_Units": 117552.0,
+      "EV_Share_Pct": 9.77,
+      "ICE_Share_Pct": 13.67,
+      "EV_Adoption_Index": 90.0
+    },
+    {
+      "Date": "2026-06",
+      "EV_Units": 14040.0,
+      "ICE_Units": 19122.0,
+      "Universal_Units": 112849.0,
+      "EV_Share_Pct": 9.62,
+      "ICE_Share_Pct": 13.1,
+      "EV_Adoption_Index": 90.2
+    },
+    {
+      "Date": "2026-07",
+      "EV_Units": 15141.0,
+      "ICE_Units": 19453.0,
+      "Universal_Units": 115514.0,
+      "EV_Share_Pct": 10.09,
+      "ICE_Share_Pct": 12.96,
+      "EV_Adoption_Index": 91.2
+    },
+    {
+      "Date": "2026-08",
+      "EV_Units": 14020.0,
+      "ICE_Units": 18015.0,
+      "Universal_Units": 105557.0,
+      "EV_Share_Pct": 10.19,
+      "ICE_Share_Pct": 13.09,
+      "EV_Adoption_Index": 91.7
+    },
+    {
+      "Date": "2026-09",
+      "EV_Units": 16474.0,
+      "ICE_Units": 20778.0,
+      "Universal_Units": 124392.0,
+      "EV_Share_Pct": 10.19,
+      "ICE_Share_Pct": 12.85,
+      "EV_Adoption_Index": 92.3
+    },
+    {
+      "Date": "2026-10",
+      "EV_Units": 17950.0,
+      "ICE_Units": 19825.0,
+      "Universal_Units": 126101.0,
+      "EV_Share_Pct": 10.95,
+      "ICE_Share_Pct": 12.1,
+      "EV_Adoption_Index": 93.1
+    }
+  ],
+  "ev_share_vs_adoption_corr": 0.976,
+  "ev_share_2019_pct": 0.0,
+  "ev_share_2026_pct": 9.81,
+  "ice_share_2019_pct": 24.09,
+  "ice_share_2026_pct": 13.05
+}

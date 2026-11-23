@@ -1,0 +1,9 @@
+{
+  "method": "Proportional Middle-Out (Family-Region) + Largest-Remainder Coherent Integer Rounding",
+  "total_bottom_up_units": 2690526,
+  "total_by_family_sum": 2690526,
+  "total_by_region_sum": 2690526,
+  "total_by_bu_sum": 2690526,
+  "total_by_date_sum": 2690526,
+  "max_hierarchy_discrepancy": 0
+}

@@ -1,0 +1,338 @@
+{
+  "pipeline_stage": "Workstream 1: Data Cleaning & Quality Reconciliation",
+  "files_profiled": [
+    "train.csv",
+    "test.csv",
+    "macro_indicators.csv",
+    "sku_master.csv",
+    "events_calendar.csv",
+    "inventory_stockouts.csv",
+    "sample_submission.csv"
+  ],
+  "train_summary": {
+    "file": "train.csv",
+    "rows_before": 248248,
+    "rows_after_dedup": 244557,
+    "rows_after_panel_completion": 245522,
+    "missing_panel_rows_added": 965,
+    "unique_skus_before": 2659,
+    "unique_skus_after": 598,
+    "unique_regions_before": 30,
+    "unique_regions_after": 6,
+    "unique_customers_before": 220,
+    "unique_customers_after": 12,
+    "reconciliation_mismatches_before": 1591,
+    "reconciliation_mismatches_after": 0,
+    "negative_units_before": 491,
+    "negative_units_after": 0,
+    "total_units_before_raw": 12217326.0,
+    "total_units_after_clean": 11703654.0,
+    "issues": [
+      {
+        "file": "train.csv",
+        "issue_type": "duplicate_record_id",
+        "category": "Data Error",
+        "rows_affected": 3682,
+        "action": "Retained row with latest Load_Timestamp per Record_ID"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "nonstandard_date_format",
+        "category": "Data Error",
+        "rows_affected": 9821,
+        "action": "Standardized all date formats to YYYY-MM"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "transposed_year_2062",
+        "category": "Data Error",
+        "rows_affected": 30,
+        "action": "Corrected transposed year 2062-XX -> 2026-XX verified via Load_Timestamp"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "date_vs_year_month_mismatch",
+        "category": "Data Error",
+        "rows_affected": 246,
+        "action": "Overwrote Year and Month from authoritative Date column"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "nonstandard_sku_id",
+        "category": "Data Error",
+        "rows_affected": 3683,
+        "action": "Standardized SKU_ID to canonical [A-Z]{3}-NNN format"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "missing_product_metadata",
+        "category": "Data Error",
+        "rows_affected": 2210,
+        "action": "Backfilled missing Product_Family and SKU_Description from sku_master.csv"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "inconsistent_sales_channel",
+        "category": "Data Error",
+        "rows_affected": 3683,
+        "action": "Standardized 17 channel variants to 4 canonical labels"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "customer_name_typos",
+        "category": "Data Error",
+        "rows_affected": 2455,
+        "action": "Standardized 220 customer spelling variants to 12 canonical OEM/distributor names"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "inconsistent_region_labels",
+        "category": "Data Error",
+        "rows_affected": 5912,
+        "action": "Standardized 30 region label variants to 6 canonical regions"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "missing_region_recovered",
+        "category": "Data Error",
+        "rows_affected": 942,
+        "action": "Recovered 933 missing Region values via SKU-Date slot & Customer mapping (9 dropped)"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "negative_units_sign_flip",
+        "category": "Data Error",
+        "rows_affected": 491,
+        "action": "Corrected sign-flip errors (took absolute value of Units_Sold and Revenue_USD)"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "price_scale_and_currency_errors",
+        "category": "Data Error",
+        "rows_affected": 1497,
+        "action": "Reset anomalous Unit_Price_USD to canonical SKU period USD price (100x cents=614, 10x=385, EUR 0.84x=498, other=0)"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "missing_or_nonnumeric_units",
+        "category": "Data Error",
+        "rows_affected": 3544,
+        "action": "Recovered 2545 from Revenue/Price, 667 as 0, 332 remain truly missing (also cleaned 217 '-' and 44 comma-formatted values)"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "units_scale_errors_10x_100x",
+        "category": "Data Error",
+        "rows_affected": 368,
+        "action": "Divided 10x (293) and 100x (75) unit entry errors verified via Revenue/Price"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "revenue_scale_and_currency_errors",
+        "category": "Data Error",
+        "rows_affected": 1308,
+        "action": "Reconciled 10x revenue (810) and EUR revenue (498) to Units * Price_USD"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "residual_revenue_mismatch",
+        "category": "Data Error",
+        "rows_affected": 479,
+        "action": "Reconciled residual Revenue_USD mismatches to Units_Clean * Price_Clean"
+      },
+      {
+        "file": "train.csv",
+        "issue_type": "missing_panel_rows_vs_zeros",
+        "category": "Data Error / System Gap",
+        "rows_affected": 965,
+        "action": "Inserted explicit NaN panel rows (kept distinct from 0 = no order) for missing SKU-Region-Months"
+      }
+    ]
+  },
+  "macro_summary": {
+    "file": "macro_indicators.csv",
+    "rows_before": 114,
+    "rows_after": 113,
+    "nulls_before": 5,
+    "nulls_after": 0,
+    "issues": [
+      {
+        "file": "macro_indicators.csv",
+        "issue_type": "duplicate_date",
+        "category": "Data Error",
+        "rows_affected": 1,
+        "action": "Dropped exact duplicate Date rows (2022-06)"
+      },
+      {
+        "file": "macro_indicators.csv",
+        "issue_type": "scale_error_pmi_10x",
+        "category": "Data Error",
+        "rows_affected": 1,
+        "action": "Multiplied PMI values < 20 by 10 (2023-05: 4.79 -> 47.9)"
+      },
+      {
+        "file": "macro_indicators.csv",
+        "issue_type": "scale_error_auto_yoy_decimal_vs_pct",
+        "category": "Data Error",
+        "rows_affected": 12,
+        "action": "Converted 2019 decimal fractions to percentage points (* 100)"
+      },
+      {
+        "file": "macro_indicators.csv",
+        "issue_type": "missing_indicator_values",
+        "category": "Data Error",
+        "rows_affected": 5,
+        "action": "Linearly interpolated missing macro indicator values across time"
+      }
+    ]
+  },
+  "all_issues": [
+    {
+      "file": "train.csv",
+      "issue_type": "duplicate_record_id",
+      "category": "Data Error",
+      "rows_affected": 3682,
+      "action": "Retained row with latest Load_Timestamp per Record_ID"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "nonstandard_date_format",
+      "category": "Data Error",
+      "rows_affected": 9821,
+      "action": "Standardized all date formats to YYYY-MM"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "transposed_year_2062",
+      "category": "Data Error",
+      "rows_affected": 30,
+      "action": "Corrected transposed year 2062-XX -> 2026-XX verified via Load_Timestamp"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "date_vs_year_month_mismatch",
+      "category": "Data Error",
+      "rows_affected": 246,
+      "action": "Overwrote Year and Month from authoritative Date column"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "nonstandard_sku_id",
+      "category": "Data Error",
+      "rows_affected": 3683,
+      "action": "Standardized SKU_ID to canonical [A-Z]{3}-NNN format"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "missing_product_metadata",
+      "category": "Data Error",
+      "rows_affected": 2210,
+      "action": "Backfilled missing Product_Family and SKU_Description from sku_master.csv"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "inconsistent_sales_channel",
+      "category": "Data Error",
+      "rows_affected": 3683,
+      "action": "Standardized 17 channel variants to 4 canonical labels"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "customer_name_typos",
+      "category": "Data Error",
+      "rows_affected": 2455,
+      "action": "Standardized 220 customer spelling variants to 12 canonical OEM/distributor names"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "inconsistent_region_labels",
+      "category": "Data Error",
+      "rows_affected": 5912,
+      "action": "Standardized 30 region label variants to 6 canonical regions"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "missing_region_recovered",
+      "category": "Data Error",
+      "rows_affected": 942,
+      "action": "Recovered 933 missing Region values via SKU-Date slot & Customer mapping (9 dropped)"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "negative_units_sign_flip",
+      "category": "Data Error",
+      "rows_affected": 491,
+      "action": "Corrected sign-flip errors (took absolute value of Units_Sold and Revenue_USD)"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "price_scale_and_currency_errors",
+      "category": "Data Error",
+      "rows_affected": 1497,
+      "action": "Reset anomalous Unit_Price_USD to canonical SKU period USD price (100x cents=614, 10x=385, EUR 0.84x=498, other=0)"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "missing_or_nonnumeric_units",
+      "category": "Data Error",
+      "rows_affected": 3544,
+      "action": "Recovered 2545 from Revenue/Price, 667 as 0, 332 remain truly missing (also cleaned 217 '-' and 44 comma-formatted values)"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "units_scale_errors_10x_100x",
+      "category": "Data Error",
+      "rows_affected": 368,
+      "action": "Divided 10x (293) and 100x (75) unit entry errors verified via Revenue/Price"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "revenue_scale_and_currency_errors",
+      "category": "Data Error",
+      "rows_affected": 1308,
+      "action": "Reconciled 10x revenue (810) and EUR revenue (498) to Units * Price_USD"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "residual_revenue_mismatch",
+      "category": "Data Error",
+      "rows_affected": 479,
+      "action": "Reconciled residual Revenue_USD mismatches to Units_Clean * Price_Clean"
+    },
+    {
+      "file": "train.csv",
+      "issue_type": "missing_panel_rows_vs_zeros",
+      "category": "Data Error / System Gap",
+      "rows_affected": 965,
+      "action": "Inserted explicit NaN panel rows (kept distinct from 0 = no order) for missing SKU-Region-Months"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue_type": "duplicate_date",
+      "category": "Data Error",
+      "rows_affected": 1,
+      "action": "Dropped exact duplicate Date rows (2022-06)"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue_type": "scale_error_pmi_10x",
+      "category": "Data Error",
+      "rows_affected": 1,
+      "action": "Multiplied PMI values < 20 by 10 (2023-05: 4.79 -> 47.9)"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue_type": "scale_error_auto_yoy_decimal_vs_pct",
+      "category": "Data Error",
+      "rows_affected": 12,
+      "action": "Converted 2019 decimal fractions to percentage points (* 100)"
+    },
+    {
+      "file": "macro_indicators.csv",
+      "issue_type": "missing_indicator_values",
+      "category": "Data Error",
+      "rows_affected": 5,
+      "action": "Linearly interpolated missing macro indicator values across time"
+    }
+  ]
+}

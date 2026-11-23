@@ -1,0 +1,53 @@
+{
+  "total_register_entries": 10609,
+  "by_category": {
+    "Data Error": 7437,
+    "Real Event (Supply Constraint)": 2347,
+    "Real Event (Commercial)": 690,
+    "Real Event (Account Change)": 45,
+    "Real Event (Structural Break)": 30,
+    "Real Event (Behavioral Shift)": 29,
+    "Master Data Contradiction": 16,
+    "Real Event (Demand Shock)": 15
+  },
+  "by_type": {
+    "Data_Error:missing_units_from_revenue": 2545,
+    "Unrecorded_Isolated_Stockout": 1575,
+    "Missing_Panel_Row": 960,
+    "Unrecorded_Semiconductor_Stockout": 772,
+    "Forward_Buying_Pre_Price_Hike": 690,
+    "Data_Error:missing_units_zero_recovered": 667,
+    "Data_Error:price_cents_100x_fixed": 614,
+    "Data_Error:price_eur_currency_fixed;revenue_eur_fixed": 498,
+    "Data_Error:sign_flip_fixed": 491,
+    "Data_Error:revenue_reconciled": 479,
+    "Data_Error:revenue_10x_fixed": 425,
+    "Data_Error:price_10x_fixed;revenue_10x_fixed": 385,
+    "Data_Error:units_10x_fixed": 293,
+    "Data_Error:units_100x_fixed": 75,
+    "Permanent_Capacity_Step_Up": 30,
+    "Ordering_Cycle_Change": 29,
+    "Customer_Switch": 29,
+    "Sales_Before_Master_Launch_Date": 16,
+    "Lost_Account": 16,
+    "One_Off_Demand_Spike": 15,
+    "ERP_Migration_Missing_Row": 5
+  },
+  "forward_buying_2022_12_series": 690,
+  "helios_india_structural_breaks": 30,
+  "customer_switches": 29,
+  "ordering_cycle_changes": 29,
+  "lost_accounts": 16,
+  "master_data_contradictions": 16,
+  "stockout_summary": {
+    "recorded_stockout_rows": 5830,
+    "detected_unrecorded_stockout_rows": 2347,
+    "detected_unrecorded_semi_rows": 772,
+    "detected_unrecorded_isolated_rows": 1575,
+    "total_recorded_lost_units": 81827.0,
+    "total_detected_unrecorded_lost_units": 65115.0,
+    "total_shipped_units_clean": 11703654.0,
+    "total_unconstrained_demand": 11865141.0,
+    "total_uplift_units": 161487.0
+  }
+}
