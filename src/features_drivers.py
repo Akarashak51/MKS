@@ -25,13 +25,9 @@ def detect_cycle_and_phase(vals: np.ndarray, month_indices: np.ndarray) -> tuple
             off_mask = ~on_mask
             if on_mask.sum() < 3 or off_mask.sum() < 3:
                 continue
-            on_rate = nz[on_mask].mean()
-            off_rate = nz[off_mask].mean()
-            score = on_rate - off_rate
+            score = float(nz[on_mask].mean() - nz[off_mask].mean())
             if score > best_score:
-                best_score = float(score)
-                best_p = p
-                best_phase = ph
+                best_score, best_p, best_phase = score, p, ph
     if best_score >= 0.55:
         return best_p, best_phase, round(best_score, 3)
     return 1, 0, round(best_score, 3)
@@ -46,19 +42,14 @@ def compute_intermittency_profiles(df: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for (sid, reg), g in df.groupby(["SKU_ID", "Region"], sort=False):
         recent = g.tail(24)
-        u_all = g["Unconstrained_Demand"].dropna().values
         u_rec = recent["Unconstrained_Demand"].dropna().values
         t_rec = recent.loc[recent["Unconstrained_Demand"].notna(), "t_idx"].values
-
         pos_rec = u_rec[u_rec > 0]
-        n_obs = len(u_rec)
-        n_pos = len(pos_rec)
+        n_obs, n_pos = len(u_rec), len(pos_rec)
         zero_pct = float((u_rec == 0).mean()) if n_obs > 0 else 1.0
 
         if n_pos == 0:
-            adi = 99.0
-            cv2 = 0.0
-            sbc = "Inactive/Zero"
+            adi, cv2, sbc = 99.0, 0.0, "Inactive/Zero"
         else:
             adi = float(n_obs / n_pos)
             mean_p = float(pos_rec.mean())
@@ -66,9 +57,9 @@ def compute_intermittency_profiles(df: pd.DataFrame) -> pd.DataFrame:
             cv2 = float((std_p / mean_p) ** 2) if mean_p > 0 else 0.0
             if adi < 1.32 and cv2 < 0.49:
                 sbc = "Smooth"
-            elif adi < 1.32 and cv2 >= 0.49:
+            elif adi < 1.32:
                 sbc = "Erratic"
-            elif adi >= 1.32 and cv2 < 0.49:
+            elif cv2 < 0.49:
                 sbc = "Intermittent"
             else:
                 sbc = "Lumpy"
@@ -110,7 +101,6 @@ def analyze_macro_drivers_and_ev_shift(
     ]
     lags = [0, 1, 2, 3, 4, 5, 6]
 
-    # Monthly family unconstrained demand (exclude COVID shock 2020-03..2020-06 for cleaner structural lead/lag)
     fam_monthly = (
         df.groupby(["Date", "Product_Family"])["Unconstrained_Demand"]
         .sum()
@@ -119,63 +109,64 @@ def analyze_macro_drivers_and_ev_shift(
     )
     m_df = macro.set_index("Date").reindex(fam_monthly.index)
 
-    # Deseasonalize each family series via month-of-year ratio so seasonal cycles don't confound macro lag
+    # STRICTLY exclude COVID shock AND its 12-month YoY base-effect echo (2020-02 through 2021-06)
+    non_covid_mask = ~((fam_monthly.index >= "2020-02") & (fam_monthly.index <= "2021-06"))
+
+    # Deseasonalize each family series using non-COVID months only
     months = pd.Series([int(d[5:7]) for d in fam_monthly.index], index=fam_monthly.index)
     fam_deseas = pd.DataFrame(index=fam_monthly.index)
     for fam in fam_monthly.columns:
         s = fam_monthly[fam]
-        m_means = s.groupby(months).transform("mean")
-        fam_deseas[fam] = s / (m_means + 1e-6)
+        m_means = s[non_covid_mask].groupby(months[non_covid_mask]).mean()
+        fam_deseas[fam] = s / months.map(m_means)
 
     heatmap = {}
     best_drivers = {}
+    family_indicator_best_lags = {}
     lag_stability = []
 
-    early_mask = fam_deseas.index <= "2022-12"
-    late_mask = fam_deseas.index >= "2023-01"
+    early_mask = (fam_deseas.index <= "2022-12") & non_covid_mask
+    late_mask = (fam_deseas.index >= "2023-01") & non_covid_mask
 
     for fam in sorted(fam_monthly.columns):
         y = fam_deseas[fam]
-        # YoY growth of deseasonalized demand to remove secular trend when checking cyclical indicators
         y_yoy = y.pct_change(12)
         heatmap[fam] = {}
-        best_ind = None
-        best_lag = 0
-        best_abs_r = -1.0
-        best_r = 0.0
+        family_indicator_best_lags[fam] = {}
+        best_ind, best_lag, best_abs_r, best_r = None, 0, -1.0, 0.0
 
         for ind in indicators:
             x_raw = m_df[ind]
-            # Use level for PMI/YoY/Util/EV_Adoption and YoY diff for indices
-            x_series = x_raw if ind in ("ISM_Manufacturing_PMI", "Auto_Production_YoY_Pct", "Industrial_Util_Rate_Pct", "EV_Adoption_Index") else x_raw.pct_change(12)
-            target = y if ind == "EV_Adoption_Index" else y_yoy
+            x_series = (
+                x_raw
+                if ind in ("ISM_Manufacturing_PMI", "Auto_Production_YoY_Pct", "Industrial_Util_Rate_Pct", "EV_Adoption_Index")
+                else x_raw.pct_change(12)
+            )
+            # Use detrended diff for EV_Adoption_Index vs family total, YoY for cyclical indicators
+            target = y.diff() if ind == "EV_Adoption_Index" else y_yoy
+            x_eval = x_series.diff() if ind == "EV_Adoption_Index" else x_series
 
             lag_corrs = {}
-            ind_best_lag = 0
-            ind_best_r = 0.0
+            ind_best_lag, ind_best_r = 0, 0.0
             for lag in lags:
-                xs = x_series.shift(lag)
-                valid = target.notna() & xs.notna() & np.isfinite(target) & np.isfinite(xs)
+                xs = x_eval.shift(lag)
+                valid = non_covid_mask & target.notna() & xs.notna() & np.isfinite(target) & np.isfinite(xs)
                 r = float(np.corrcoef(target[valid], xs[valid])[0, 1]) if valid.sum() >= 18 else 0.0
                 if np.isnan(r):
                     r = 0.0
                 lag_corrs[str(lag)] = round(r, 3)
                 if abs(r) > abs(ind_best_r):
-                    ind_best_r = r
-                    ind_best_lag = lag
+                    ind_best_r, ind_best_lag = r, lag
 
             heatmap[fam][ind] = lag_corrs
+            family_indicator_best_lags[fam][ind] = int(ind_best_lag)
             if abs(ind_best_r) > best_abs_r:
-                best_abs_r = abs(ind_best_r)
-                best_r = ind_best_r
-                best_ind = ind
-                best_lag = ind_best_lag
+                best_abs_r, best_r, best_ind, best_lag = abs(ind_best_r), ind_best_r, ind, ind_best_lag
 
-            # Early vs Late lag stability check
             def regime_best(rmask):
                 br, bl = 0.0, 0
                 for lag in lags:
-                    xs = x_series.shift(lag)
+                    xs = x_eval.shift(lag)
                     v = rmask & target.notna() & xs.notna() & np.isfinite(target) & np.isfinite(xs)
                     if v.sum() >= 12:
                         rv = float(np.corrcoef(target[v], xs[v])[0, 1])
@@ -185,7 +176,7 @@ def analyze_macro_drivers_and_ev_shift(
 
             early_lag, early_r = regime_best(early_mask)
             late_lag, late_r = regime_best(late_mask)
-            if abs(ind_best_r) >= 0.30:
+            if abs(ind_best_r) >= 0.25:
                 lag_stability.append({
                     "Product_Family": fam,
                     "Indicator": ind,
@@ -205,7 +196,7 @@ def analyze_macro_drivers_and_ev_shift(
             "correlation": round(best_r, 3),
         }
 
-    # Expert: The Shift to Electric Vehicles (EV vs ICE vs Universal)
+    # EV vs ICE Shift (report BOTH level correlation AND detrended first-difference correlation!)
     df_pt = df.merge(sku_master[["SKU_ID", "Powertrain_Application"]], on="SKU_ID", how="left")
     pt_monthly = (
         df_pt.groupby(["Date", "Powertrain_Application"])["Unconstrained_Demand"]
@@ -230,22 +221,23 @@ def analyze_macro_drivers_and_ev_shift(
             "EV_Adoption_Index": round(float(row["EV_Adoption_Index"]), 2),
         })
 
-    # Annual EV vs ICE summary
-    pt_annual = (
-        df_pt.groupby(["Year", "Powertrain_Application"])["Unconstrained_Demand"]
-        .sum()
-        .unstack(fill_value=0.0)
-    )
-    ev_corr = float(np.corrcoef(pt_monthly["EV_Share_Pct"], pt_monthly["EV_Adoption_Index"])[0, 1])
+    ev_level_corr = float(np.corrcoef(pt_monthly["EV_Share_Pct"], pt_monthly["EV_Adoption_Index"])[0, 1])
+    ev_diff_s = pt_monthly["EV_Share_Pct"].diff().dropna()
+    idx_diff_s = pt_monthly["EV_Adoption_Index"].diff().dropna()
+    ev_detrended_corr = float(np.corrcoef(ev_diff_s, idx_diff_s)[0, 1])
 
     return {
+        "covid_window_excluded": "2020-02 to 2021-06 (shock + 12m YoY base echo)",
         "indicators": indicators,
         "lags": lags,
         "family_best_drivers": best_drivers,
+        "family_indicator_best_lags": family_indicator_best_lags,
         "heatmap": heatmap,
         "lag_stability": lag_stability,
         "ev_shift_monthly": ev_shift_records,
-        "ev_share_vs_adoption_corr": round(ev_corr, 3),
+        "ev_share_vs_adoption_corr": round(ev_level_corr, 3),
+        "ev_share_vs_adoption_detrended_corr": round(ev_detrended_corr, 3),
+        "ev_corr_note": "Level correlation reflects shared secular upward trend; detrended MoM diff correlation isolates short-term co-movement.",
         "ev_share_2019_pct": float(pt_monthly.loc["2019-01":"2019-12", "EV_Share_Pct"].mean().round(2)),
         "ev_share_2026_pct": float(pt_monthly.loc["2026-01":"2026-10", "EV_Share_Pct"].mean().round(2)),
         "ice_share_2019_pct": float(pt_monthly.loc["2019-01":"2019-12", "ICE_Share_Pct"].mean().round(2)),
@@ -267,14 +259,14 @@ def run_feature_driver_analysis(raw_dir: Path = RAW_DIR, out_dir: Path = OUT_DIR
 
     return {
         "sbc_distribution": interm_df["SBC_Class"].value_counts().to_dict(),
-        "cycle_distribution": interm_df["Detected_Cycle_Period"].value_counts().to_dict(),
+        "cycle_distribution": {str(k): int(v) for k, v in interm_df["Detected_Cycle_Period"].value_counts().items()},
+        "covid_window_excluded": driver_report["covid_window_excluded"],
         "family_best_drivers": driver_report["family_best_drivers"],
         "ev_shift": {
             "ev_2019_pct": driver_report["ev_share_2019_pct"],
             "ev_2026_pct": driver_report["ev_share_2026_pct"],
-            "ice_2019_pct": driver_report["ice_share_2019_pct"],
-            "ice_2026_pct": driver_report["ice_share_2026_pct"],
-            "corr_with_ev_index": driver_report["ev_share_vs_adoption_corr"],
+            "level_corr": driver_report["ev_share_vs_adoption_corr"],
+            "detrended_corr": driver_report["ev_share_vs_adoption_detrended_corr"],
         },
         "lag_stability_checked": len(driver_report["lag_stability"]),
     }

@@ -1,9 +1,8 @@
 {
-  "method": "Proportional Middle-Out (Family-Region) + Largest-Remainder Coherent Integer Rounding",
-  "total_bottom_up_units": 2690526,
-  "total_by_family_sum": 2690526,
-  "total_by_region_sum": 2690526,
-  "total_by_bu_sum": 2690526,
-  "total_by_date_sum": 2690526,
-  "max_hierarchy_discrepancy": 0
+  "method": "90/10 proportional pull toward prior-year same-month Family-Region volume (clipped +/-8%) + largest-remainder integer rounding",
+  "total_bottom_up_units": 2632847,
+  "raw_ensemble_sum_units": 2628652.8,
+  "net_reconciliation_adjustment_pct": 0.16,
+  "max_hierarchy_discrepancy": 0,
+  "additivity_note": "Bottom-up integer rows sum identically across SKU -> Family -> BU -> Region -> Global groupings by construction."
 }

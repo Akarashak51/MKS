@@ -20,13 +20,14 @@
     "unique_regions_before": 30,
     "unique_regions_after": 6,
     "unique_customers_before": 220,
+    "unique_channels_before": 17,
     "unique_customers_after": 12,
     "reconciliation_mismatches_before": 1591,
     "reconciliation_mismatches_after": 0,
     "negative_units_before": 491,
     "negative_units_after": 0,
     "total_units_before_raw": 12217326.0,
-    "total_units_after_clean": 11703654.0,
+    "total_units_after_clean": 11702848.0,
     "issues": [
       {
         "file": "train.csv",
@@ -75,21 +76,21 @@
         "issue_type": "inconsistent_sales_channel",
         "category": "Data Error",
         "rows_affected": 3683,
-        "action": "Standardized 17 channel variants to 4 canonical labels"
+        "action": "Standardized 17 raw channel variants to 4 canonical labels"
       },
       {
         "file": "train.csv",
         "issue_type": "customer_name_typos",
         "category": "Data Error",
         "rows_affected": 2455,
-        "action": "Standardized 220 customer spelling variants to 12 canonical OEM/distributor names"
+        "action": "Standardized 220 raw customer spelling variants to 12 canonical OEM/distributor names"
       },
       {
         "file": "train.csv",
         "issue_type": "inconsistent_region_labels",
         "category": "Data Error",
         "rows_affected": 5912,
-        "action": "Standardized 30 region label variants to 6 canonical regions"
+        "action": "Standardized 30 raw region label variants (incl. nulls) to 6 canonical regions"
       },
       {
         "file": "train.csv",
@@ -135,10 +136,10 @@
       },
       {
         "file": "train.csv",
-        "issue_type": "residual_revenue_mismatch",
+        "issue_type": "residual_upr_mismatch",
         "category": "Data Error",
         "rows_affected": 479,
-        "action": "Reconciled residual Revenue_USD mismatches to Units_Clean * Price_Clean"
+        "action": "Checked implied R/P against SKU-Region median: fixed Units on 15 rows, fixed Revenue on 464 rows"
       },
       {
         "file": "train.csv",
@@ -234,21 +235,21 @@
       "issue_type": "inconsistent_sales_channel",
       "category": "Data Error",
       "rows_affected": 3683,
-      "action": "Standardized 17 channel variants to 4 canonical labels"
+      "action": "Standardized 17 raw channel variants to 4 canonical labels"
     },
     {
       "file": "train.csv",
       "issue_type": "customer_name_typos",
       "category": "Data Error",
       "rows_affected": 2455,
-      "action": "Standardized 220 customer spelling variants to 12 canonical OEM/distributor names"
+      "action": "Standardized 220 raw customer spelling variants to 12 canonical OEM/distributor names"
     },
     {
       "file": "train.csv",
       "issue_type": "inconsistent_region_labels",
       "category": "Data Error",
       "rows_affected": 5912,
-      "action": "Standardized 30 region label variants to 6 canonical regions"
+      "action": "Standardized 30 raw region label variants (incl. nulls) to 6 canonical regions"
     },
     {
       "file": "train.csv",
@@ -294,10 +295,10 @@
     },
     {
       "file": "train.csv",
-      "issue_type": "residual_revenue_mismatch",
+      "issue_type": "residual_upr_mismatch",
       "category": "Data Error",
       "rows_affected": 479,
-      "action": "Reconciled residual Revenue_USD mismatches to Units_Clean * Price_Clean"
+      "action": "Checked implied R/P against SKU-Region median: fixed Units on 15 rows, fixed Revenue on 464 rows"
     },
     {
       "file": "train.csv",

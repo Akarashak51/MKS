@@ -46,6 +46,8 @@ class DataStore:
             self.backtest = json.load(f)
         with open(out_dir / "macro_lead_lag.json") as f:
             self.macro_drivers = json.load(f)
+        with open(out_dir / "agg_intervals.json") as f:
+            self.agg_intervals = json.load(f)
 
         # Ensure Revenue_Unconstrained exists on train
         self.train["Revenue_Unconstrained"] = (
@@ -83,9 +85,42 @@ class DataStore:
                 out = out[out[col] == val]
         return out
 
+    def _select_interval_level(self, params: dict) -> str:
+        sku = params.get("sku", ["ALL"])[0]
+        fam = params.get("family", ["ALL"])[0]
+        reg = params.get("region", ["ALL"])[0]
+        if sku and sku != "ALL":
+            return "sku"
+        if fam != "ALL" and reg != "ALL":
+            return "family_region"
+        if fam != "ALL":
+            return "family"
+        if reg != "ALL":
+            return "region"
+        return "global"
+
+    def _apply_agg_intervals(self, f_m: pd.DataFrame, level: str) -> pd.DataFrame:
+        """Apply calibrated aggregate quantiles for non-SKU views instead of summing SKU quantiles."""
+        if level == "sku" or len(f_m) == 0:
+            return f_m
+        q_map = self.agg_intervals[level]
+        p10_list, p90_list, rev90_list = [], [], []
+        for r in f_m.itertuples(index=False):
+            hb = str(r.H_Bucket)
+            q = q_map.get(hb, {"q10": -0.15, "q90": 0.20})
+            p10_list.append(max(0, int(round(r.p50 * (1.0 + q["q10"])))))
+            p90_list.append(max(int(r.p50), int(round(r.p50 * (1.0 + q["q90"])))))
+            rev90_list.append(round(float(r.rev_p50) * (1.0 + q["q90"]), 2))
+        f_m = f_m.copy()
+        f_m["p10"] = p10_list
+        f_m["p90"] = p90_list
+        f_m["rev_p90"] = rev90_list
+        return f_m
+
     def get_overview(self, params: dict) -> dict:
         tr = self._apply_filters(self.train, params)
         fc = self._apply_filters(self.forecast, params)
+        level = self._select_interval_level(params)
 
         h_m = (
             tr.groupby("Date", as_index=False)
@@ -97,7 +132,7 @@ class DataStore:
             .sort_values("Date")
         )
         f_m = (
-            fc.groupby("Date", as_index=False)
+            fc.groupby(["Date", "H_Bucket"], as_index=False)
             .agg(
                 p10=("P10", "sum"),
                 p50=("P50", "sum"),
@@ -107,6 +142,7 @@ class DataStore:
             )
             .sort_values("Date")
         )
+        f_m = self._apply_agg_intervals(f_m, level)
 
         timeline = []
         for r in h_m.itertuples(index=False):
@@ -149,14 +185,15 @@ class DataStore:
                 "hist_total_units": round(float(tr["Unconstrained_Demand"].sum()), 0),
                 "hist_shipped_units": round(float(tr["Units_Sold_Clean"].sum()), 0),
                 "hist_total_revenue": round(float(tr["Revenue_Unconstrained"].sum()), 2),
-                "fc_p50_units": int(fc["P50"].sum()),
-                "fc_p10_units": int(fc["P10"].sum()),
-                "fc_p90_units": int(fc["P90"].sum()),
-                "fc_p50_revenue": round(float(fc["Revenue_P50"].sum()), 2),
-                "fc_p90_revenue": round(float(fc["Revenue_P90"].sum()), 2),
+                "fc_p50_units": int(f_m["p50"].sum()) if len(f_m) else 0,
+                "fc_p10_units": int(f_m["p10"].sum()) if len(f_m) else 0,
+                "fc_p90_units": int(f_m["p90"].sum()) if len(f_m) else 0,
+                "fc_p50_revenue": round(float(f_m["rev_p50"].sum()), 2) if len(f_m) else 0.0,
+                "fc_p90_revenue": round(float(f_m["rev_p90"].sum()), 2) if len(f_m) else 0.0,
+                "interval_level": level,
                 "active_skus": int(fc["SKU_ID"].nunique()),
-                "backtest_wape": self.backtest["model_comparison"]["Final Ensemble (SBC + Lifecycle)"]["WAPE_Pct"],
-                "backtest_bias": self.backtest["model_comparison"]["Final Ensemble (SBC + Lifecycle)"]["Bias_Pct"],
+                "backtest_wape": self.backtest["model_comparison"]["Reconciled & Rounded Ensemble (Final Submission)"]["WAPE_Pct"],
+                "backtest_bias": self.backtest["model_comparison"]["Reconciled & Rounded Ensemble (Final Submission)"]["Bias_Pct"],
             },
             "timeline": timeline,
             "mix_family": mix_table(fc, "Product_Family", "P50"),
@@ -201,6 +238,7 @@ class DataStore:
         zero_pct = round(float((tr["Units_Sold_Clean"] == 0).mean() * 100.0), 1) if len(tr) else 0.0
 
         return {
+            "global_audit": self.anomaly_summary["stockout_summary"],
             "summary": {
                 "series_count": len(ip),
                 "zero_month_pct": zero_pct,
@@ -251,22 +289,21 @@ class DataStore:
         ev_delta = float(params.get("ev_delta", ["0"])[0])
         price_delta = float(params.get("price_delta", ["0"])[0])
 
-        # Elasticities grounded in Workstream 3 macro sensitivity
-        # PMI: +1 pt ~ +1.4% industrial/auto demand; Auto YoY: +1% ~ +0.8%; EV Index: +5 pts ~ +4% EV, -1.5% ICE
+        # Model-derived elasticities extracted directly from fitted Ridge regression weights w_ml
+        el = self.backtest["what_if_elasticities"]
         sm_pt = self.sku_master.set_index("SKU_ID")["Powertrain_Application"].to_dict()
         pt = fc["SKU_ID"].map(sm_pt).fillna("Universal")
 
         mult = np.ones(len(fc))
-        mult *= np.clip(1.0 + 0.014 * pmi_delta, 0.65, 1.40)
-        mult *= np.clip(1.0 + 0.008 * auto_delta, 0.70, 1.35)
-        ev_adj = np.where(
+        mult *= np.clip(np.exp(el["pmi_pct_per_pt"] * pmi_delta), 0.65, 1.40)
+        mult *= np.clip(np.exp(el["auto_yoy_pct_per_pct"] * auto_delta), 0.70, 1.35)
+        ev_slope = np.where(
             pt == "EV",
-            1.0 + 0.008 * ev_delta,
-            np.where(pt == "ICE", 1.0 - 0.003 * ev_delta, 1.0),
+            el["ev_sku_pct_per_pt"],
+            np.where(pt == "ICE", el["ice_sku_pct_per_pt"], el["ev_universal_pct_per_pt"]),
         )
-        mult *= np.clip(ev_adj, 0.65, 1.50)
-        # Price elasticity (~ -0.35 on volume, +1.0 on unit price)
-        mult *= np.clip(1.0 - 0.0035 * price_delta, 0.75, 1.25)
+        mult *= np.clip(np.exp(ev_slope * ev_delta), 0.65, 1.50)
+        mult *= np.clip(np.exp(el["price_pct_per_1pct"] * price_delta), 0.70, 1.30)
 
         fc["Scen_P50"] = np.round(fc["P50"] * mult).astype(int)
         fc["Scen_P90"] = np.round(fc["P90"] * mult).astype(int)
@@ -289,6 +326,7 @@ class DataStore:
         scen_r = float(fc["Scen_Rev"].sum())
 
         return {
+            "elasticities": el,
             "deltas": {
                 "pmi_delta": pmi_delta,
                 "auto_delta": auto_delta,
@@ -307,9 +345,11 @@ class DataStore:
 
     def get_procurement(self, params: dict) -> dict:
         fc = self._apply_filters(self.forecast, params)
+        level = self._select_interval_level(params)
         monthly = (
-            fc.groupby("Date", as_index=False)
+            fc.groupby(["Date", "H_Bucket"], as_index=False)
             .agg(
+                p10=("P10", "sum"),
                 p50=("P50", "sum"),
                 p90=("P90", "sum"),
                 rev_p50=("Revenue_P50", "sum"),
@@ -317,6 +357,7 @@ class DataStore:
             )
             .sort_values("Date")
         )
+        monthly = self._apply_agg_intervals(monthly, level)
         monthly["safety_buffer"] = monthly["p90"] - monthly["p50"]
 
         by_sku = (
@@ -330,11 +371,15 @@ class DataStore:
         by_sku["safety_buffer"] = by_sku["p90_19m"] - by_sku["p50_19m"]
         by_sku = by_sku.sort_values("budget_p90", ascending=False).head(40)
 
+        tot_p50 = int(monthly["p50"].sum()) if len(monthly) else 0
+        tot_p90 = int(monthly["p90"].sum()) if len(monthly) else 0
+        tot_rev90 = round(float(monthly["rev_p90"].sum()), 2) if len(monthly) else 0.0
         return {
-            "total_p50": int(fc["P50"].sum()),
-            "total_p90": int(fc["P90"].sum()),
-            "total_safety_buffer": int(fc["P90"].sum() - fc["P50"].sum()),
-            "total_budget_p90": round(float(fc["Revenue_P90"].sum()), 2),
+            "interval_level": level,
+            "total_p50": tot_p50,
+            "total_p90": tot_p90,
+            "total_safety_buffer": tot_p90 - tot_p50,
+            "total_budget_p90": tot_rev90,
             "monthly": monthly.to_dict(orient="records"),
             "top_skus": by_sku.to_dict(orient="records"),
         }

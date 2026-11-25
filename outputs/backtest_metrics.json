@@ -1,6 +1,18 @@
 {
   "origins": [
     {
+      "origin": "2023-09",
+      "start": "2023-10",
+      "end": "2025-04",
+      "horizon_months": 19
+    },
+    {
+      "origin": "2024-03",
+      "start": "2024-04",
+      "end": "2025-10",
+      "horizon_months": 19
+    },
+    {
       "origin": "2024-09",
       "start": "2024-10",
       "end": "2026-04",
@@ -15,240 +27,469 @@
   ],
   "model_comparison": {
     "Seasonal Naive (Baseline 1)": {
-      "WAPE_Pct": 36.63,
-      "Bias_Pct": 0.06
+      "WAPE_Pct": 37.49,
+      "Bias_Pct": -4.42
     },
     "Moving Average 6M (Baseline 2)": {
-      "WAPE_Pct": 51.45,
-      "Bias_Pct": 4.03
+      "WAPE_Pct": 51.29,
+      "Bias_Pct": -2.42
     },
     "TSB Cycle-Aware (Intermittent)": {
-      "WAPE_Pct": 35.58,
-      "Bias_Pct": 1.12
+      "WAPE_Pct": 36.45,
+      "Bias_Pct": -4.11
     },
-    "Global ML (Ridge + Macro/Events)": {
-      "WAPE_Pct": 34.15,
-      "Bias_Pct": -2.28
+    "Ridge Regression (42M) + Heuristic Order Prob": {
+      "WAPE_Pct": 35.63,
+      "Bias_Pct": -5.6
     },
-    "Final Ensemble (SBC + Lifecycle)": {
-      "WAPE_Pct": 33.97,
-      "Bias_Pct": -0.67
+    "Raw Ensemble (SBC + Lifecycle)": {
+      "WAPE_Pct": 35.24,
+      "Bias_Pct": -4.86
+    },
+    "Reconciled & Rounded Ensemble (Final Submission)": {
+      "WAPE_Pct": 35.19,
+      "Bias_Pct": -4.86
     }
   },
   "by_family": {
     "Brake & Safety Systems": {
-      "WAPE_Pct": 31.85,
-      "Bias_Pct": -7.26,
-      "Baseline_SN_WAPE_Pct": 33.99
+      "WAPE_Pct": 33.18,
+      "Bias_Pct": -2.04,
+      "Baseline_SN_WAPE_Pct": 35.81
     },
     "Chassis & Structural": {
-      "WAPE_Pct": 35.03,
-      "Bias_Pct": -5.09,
-      "Baseline_SN_WAPE_Pct": 36.48
+      "WAPE_Pct": 35.74,
+      "Bias_Pct": -6.68,
+      "Baseline_SN_WAPE_Pct": 37.3
     },
     "Electrical Assemblies": {
-      "WAPE_Pct": 35.37,
-      "Bias_Pct": 3.51,
-      "Baseline_SN_WAPE_Pct": 39.34
+      "WAPE_Pct": 37.57,
+      "Bias_Pct": -7.83,
+      "Baseline_SN_WAPE_Pct": 40.44
     },
     "Hydraulic Systems": {
-      "WAPE_Pct": 37.08,
-      "Bias_Pct": 2.11,
-      "Baseline_SN_WAPE_Pct": 41.12
+      "WAPE_Pct": 38.82,
+      "Bias_Pct": -9.73,
+      "Baseline_SN_WAPE_Pct": 40.52
     },
     "Powertrain Components": {
-      "WAPE_Pct": 33.89,
-      "Bias_Pct": 2.07,
-      "Baseline_SN_WAPE_Pct": 36.04
+      "WAPE_Pct": 34.88,
+      "Bias_Pct": -1.06,
+      "Baseline_SN_WAPE_Pct": 36.73
     },
     "Precision Machined Parts": {
-      "WAPE_Pct": 33.44,
-      "Bias_Pct": 3.2,
-      "Baseline_SN_WAPE_Pct": 36.12
+      "WAPE_Pct": 34.59,
+      "Bias_Pct": -4.32,
+      "Baseline_SN_WAPE_Pct": 37.05
     },
     "Thermal Management": {
-      "WAPE_Pct": 32.77,
-      "Bias_Pct": 0.59,
-      "Baseline_SN_WAPE_Pct": 35.78
+      "WAPE_Pct": 33.5,
+      "Bias_Pct": -4.55,
+      "Baseline_SN_WAPE_Pct": 36.52
     }
   },
   "by_region": {
     "Asia Pacific": {
-      "WAPE_Pct": 32.24,
-      "Bias_Pct": -0.94,
-      "Baseline_SN_WAPE_Pct": 34.51
+      "WAPE_Pct": 33.75,
+      "Bias_Pct": -4.94,
+      "Baseline_SN_WAPE_Pct": 35.81
     },
     "Europe": {
-      "WAPE_Pct": 32.07,
-      "Bias_Pct": -2.42,
-      "Baseline_SN_WAPE_Pct": 33.78
+      "WAPE_Pct": 33.26,
+      "Bias_Pct": -6.49,
+      "Baseline_SN_WAPE_Pct": 34.38
     },
     "India": {
-      "WAPE_Pct": 35.35,
-      "Bias_Pct": -0.58,
-      "Baseline_SN_WAPE_Pct": 37.25
+      "WAPE_Pct": 36.5,
+      "Bias_Pct": -4.08,
+      "Baseline_SN_WAPE_Pct": 38.2
     },
     "Latin America": {
-      "WAPE_Pct": 35.88,
-      "Bias_Pct": -0.07,
-      "Baseline_SN_WAPE_Pct": 39.58
+      "WAPE_Pct": 37.35,
+      "Bias_Pct": -4.55,
+      "Baseline_SN_WAPE_Pct": 41.17
     },
     "Middle East & Africa": {
-      "WAPE_Pct": 41.31,
-      "Bias_Pct": 2.13,
-      "Baseline_SN_WAPE_Pct": 46.79
+      "WAPE_Pct": 42.89,
+      "Bias_Pct": -4.89,
+      "Baseline_SN_WAPE_Pct": 46.9
     },
     "North America": {
-      "WAPE_Pct": 30.99,
-      "Bias_Pct": -0.64,
-      "Baseline_SN_WAPE_Pct": 33.42
+      "WAPE_Pct": 31.68,
+      "Bias_Pct": -4.15,
+      "Baseline_SN_WAPE_Pct": 33.86
     }
   },
   "by_horizon": [
     {
       "Horizon": 1,
-      "WAPE_Pct": 31.05,
-      "Bias_Pct": -9.38,
-      "Baseline_SN_WAPE_Pct": 34.59
+      "WAPE_Pct": 31.47,
+      "Bias_Pct": -6.9,
+      "Baseline_SN_WAPE_Pct": 35.61
     },
     {
       "Horizon": 2,
-      "WAPE_Pct": 30.23,
-      "Bias_Pct": -4.34,
-      "Baseline_SN_WAPE_Pct": 34.82
+      "WAPE_Pct": 31.49,
+      "Bias_Pct": -3.48,
+      "Baseline_SN_WAPE_Pct": 36.56
     },
     {
       "Horizon": 3,
-      "WAPE_Pct": 34.46,
-      "Bias_Pct": 1.53,
-      "Baseline_SN_WAPE_Pct": 36.03
+      "WAPE_Pct": 36.23,
+      "Bias_Pct": 2.18,
+      "Baseline_SN_WAPE_Pct": 38.61
     },
     {
       "Horizon": 4,
-      "WAPE_Pct": 35.73,
-      "Bias_Pct": -2.6,
-      "Baseline_SN_WAPE_Pct": 36.1
+      "WAPE_Pct": 36.49,
+      "Bias_Pct": -4.91,
+      "Baseline_SN_WAPE_Pct": 37.46
     },
     {
       "Horizon": 5,
-      "WAPE_Pct": 34.55,
-      "Bias_Pct": -1.88,
-      "Baseline_SN_WAPE_Pct": 36.82
+      "WAPE_Pct": 35.94,
+      "Bias_Pct": -3.93,
+      "Baseline_SN_WAPE_Pct": 37.85
     },
     {
       "Horizon": 6,
-      "WAPE_Pct": 30.24,
-      "Bias_Pct": -0.64,
-      "Baseline_SN_WAPE_Pct": 36.21
+      "WAPE_Pct": 31.55,
+      "Bias_Pct": -5.03,
+      "Baseline_SN_WAPE_Pct": 36.35
     },
     {
       "Horizon": 7,
-      "WAPE_Pct": 32.39,
-      "Bias_Pct": -1.68,
-      "Baseline_SN_WAPE_Pct": 36.77
+      "WAPE_Pct": 33.51,
+      "Bias_Pct": -6.83,
+      "Baseline_SN_WAPE_Pct": 36.63
     },
     {
       "Horizon": 8,
-      "WAPE_Pct": 32.54,
-      "Bias_Pct": 1.79,
-      "Baseline_SN_WAPE_Pct": 36.27
+      "WAPE_Pct": 33.57,
+      "Bias_Pct": -3.73,
+      "Baseline_SN_WAPE_Pct": 36.52
     },
     {
       "Horizon": 9,
-      "WAPE_Pct": 37.57,
-      "Bias_Pct": 8.8,
-      "Baseline_SN_WAPE_Pct": 38.71
+      "WAPE_Pct": 38.24,
+      "Bias_Pct": 1.1,
+      "Baseline_SN_WAPE_Pct": 37.98
     },
     {
       "Horizon": 10,
-      "WAPE_Pct": 38.53,
-      "Bias_Pct": 6.39,
-      "Baseline_SN_WAPE_Pct": 39.31
+      "WAPE_Pct": 39.47,
+      "Bias_Pct": -3.36,
+      "Baseline_SN_WAPE_Pct": 37.81
     },
     {
       "Horizon": 11,
-      "WAPE_Pct": 36.86,
-      "Bias_Pct": 5.88,
-      "Baseline_SN_WAPE_Pct": 39.38
+      "WAPE_Pct": 38.24,
+      "Bias_Pct": -2.88,
+      "Baseline_SN_WAPE_Pct": 38.25
     },
     {
       "Horizon": 12,
-      "WAPE_Pct": 32.52,
-      "Bias_Pct": 3.62,
-      "Baseline_SN_WAPE_Pct": 37.56
+      "WAPE_Pct": 33.68,
+      "Bias_Pct": -4.25,
+      "Baseline_SN_WAPE_Pct": 36.64
     },
     {
       "Horizon": 13,
-      "WAPE_Pct": 32.65,
-      "Bias_Pct": -3.74,
-      "Baseline_SN_WAPE_Pct": 35.96
+      "WAPE_Pct": 34.65,
+      "Bias_Pct": -10.2,
+      "Baseline_SN_WAPE_Pct": 37.93
     },
     {
       "Horizon": 14,
-      "WAPE_Pct": 32.91,
-      "Bias_Pct": -1.28,
-      "Baseline_SN_WAPE_Pct": 36.45
+      "WAPE_Pct": 33.86,
+      "Bias_Pct": -6.76,
+      "Baseline_SN_WAPE_Pct": 37.79
     },
     {
       "Horizon": 15,
-      "WAPE_Pct": 37.09,
-      "Bias_Pct": 3.87,
-      "Baseline_SN_WAPE_Pct": 36.61
+      "WAPE_Pct": 38.03,
+      "Bias_Pct": -0.95,
+      "Baseline_SN_WAPE_Pct": 39.27
     },
     {
       "Horizon": 16,
-      "WAPE_Pct": 37.4,
-      "Bias_Pct": -2.34,
-      "Baseline_SN_WAPE_Pct": 37.6
+      "WAPE_Pct": 38.87,
+      "Bias_Pct": -7.85,
+      "Baseline_SN_WAPE_Pct": 39.43
     },
     {
       "Horizon": 17,
-      "WAPE_Pct": 35.92,
-      "Bias_Pct": -1.38,
-      "Baseline_SN_WAPE_Pct": 36.57
+      "WAPE_Pct": 37.7,
+      "Bias_Pct": -6.64,
+      "Baseline_SN_WAPE_Pct": 38.49
     },
     {
       "Horizon": 18,
-      "WAPE_Pct": 32.02,
-      "Bias_Pct": -3.12,
-      "Baseline_SN_WAPE_Pct": 35.71
+      "WAPE_Pct": 33.05,
+      "Bias_Pct": -6.54,
+      "Baseline_SN_WAPE_Pct": 36.95
     },
     {
       "Horizon": 19,
-      "WAPE_Pct": 33.48,
-      "Bias_Pct": -7.71,
-      "Baseline_SN_WAPE_Pct": 35.79
+      "WAPE_Pct": 34.59,
+      "Bias_Pct": -9.52,
+      "Baseline_SN_WAPE_Pct": 36.98
     }
   ],
+  "by_origin": [
+    {
+      "origin": "2023-09",
+      "window": "2023-10..2025-04",
+      "reconciled_wape_pct": 37.03,
+      "reconciled_bias_pct": -9.02,
+      "snaive_wape_pct": 39.46,
+      "snaive_bias_pct": -8.96,
+      "by_family": {
+        "Brake & Safety Systems": {
+          "wape_pct": 35.83,
+          "bias_pct": 3.76
+        },
+        "Chassis & Structural": {
+          "wape_pct": 36.63,
+          "bias_pct": -6.77
+        },
+        "Electrical Assemblies": {
+          "wape_pct": 41.14,
+          "bias_pct": -21.23
+        },
+        "Hydraulic Systems": {
+          "wape_pct": 40.9,
+          "bias_pct": -21.81
+        },
+        "Powertrain Components": {
+          "wape_pct": 35.93,
+          "bias_pct": -5.09
+        },
+        "Precision Machined Parts": {
+          "wape_pct": 36.02,
+          "bias_pct": -10.58
+        },
+        "Thermal Management": {
+          "wape_pct": 35.1,
+          "bias_pct": -9.82
+        }
+      }
+    },
+    {
+      "origin": "2024-03",
+      "window": "2024-04..2025-10",
+      "reconciled_wape_pct": 35.22,
+      "reconciled_bias_pct": -10.64,
+      "snaive_wape_pct": 37.02,
+      "snaive_bias_pct": -8.83,
+      "by_family": {
+        "Brake & Safety Systems": {
+          "wape_pct": 33.12,
+          "bias_pct": -0.37
+        },
+        "Chassis & Structural": {
+          "wape_pct": 36.0,
+          "bias_pct": -9.49
+        },
+        "Electrical Assemblies": {
+          "wape_pct": 37.42,
+          "bias_pct": -17.89
+        },
+        "Hydraulic Systems": {
+          "wape_pct": 39.09,
+          "bias_pct": -22.0
+        },
+        "Powertrain Components": {
+          "wape_pct": 34.64,
+          "bias_pct": -6.54
+        },
+        "Precision Machined Parts": {
+          "wape_pct": 34.9,
+          "bias_pct": -13.62
+        },
+        "Thermal Management": {
+          "wape_pct": 33.22,
+          "bias_pct": -10.26
+        }
+      }
+    },
+    {
+      "origin": "2024-09",
+      "window": "2024-10..2026-04",
+      "reconciled_wape_pct": 34.18,
+      "reconciled_bias_pct": -1.19,
+      "snaive_wape_pct": 36.39,
+      "snaive_bias_pct": -3.9,
+      "by_family": {
+        "Brake & Safety Systems": {
+          "wape_pct": 31.71,
+          "bias_pct": -5.15
+        },
+        "Chassis & Structural": {
+          "wape_pct": 35.56,
+          "bias_pct": -5.91
+        },
+        "Electrical Assemblies": {
+          "wape_pct": 35.47,
+          "bias_pct": 1.39
+        },
+        "Hydraulic Systems": {
+          "wape_pct": 37.54,
+          "bias_pct": -2.07
+        },
+        "Powertrain Components": {
+          "wape_pct": 34.65,
+          "bias_pct": 4.66
+        },
+        "Precision Machined Parts": {
+          "wape_pct": 33.23,
+          "bias_pct": 0.75
+        },
+        "Thermal Management": {
+          "wape_pct": 32.86,
+          "bias_pct": 0.31
+        }
+      }
+    },
+    {
+      "origin": "2025-03",
+      "window": "2025-04..2026-10",
+      "reconciled_wape_pct": 34.31,
+      "reconciled_bias_pct": 1.54,
+      "snaive_wape_pct": 37.11,
+      "snaive_bias_pct": 4.08,
+      "by_family": {
+        "Brake & Safety Systems": {
+          "wape_pct": 32.13,
+          "bias_pct": -6.13
+        },
+        "Chassis & Structural": {
+          "wape_pct": 34.83,
+          "bias_pct": -4.59
+        },
+        "Electrical Assemblies": {
+          "wape_pct": 36.19,
+          "bias_pct": 7.07
+        },
+        "Hydraulic Systems": {
+          "wape_pct": 37.7,
+          "bias_pct": 7.91
+        },
+        "Powertrain Components": {
+          "wape_pct": 34.28,
+          "bias_pct": 3.12
+        },
+        "Precision Machined Parts": {
+          "wape_pct": 34.12,
+          "bias_pct": 7.05
+        },
+        "Thermal Management": {
+          "wape_pct": 32.84,
+          "bias_pct": 1.69
+        }
+      }
+    }
+  ],
+  "aggregate_accuracy": {
+    "global_monthly_total": {
+      "reconciled_wape_pct": 7.52,
+      "reconciled_bias_pct": -4.86,
+      "snaive_wape_pct": 8.42,
+      "snaive_bias_pct": -4.42
+    },
+    "family_region_monthly": {
+      "reconciled_wape_pct": 11.29,
+      "reconciled_bias_pct": -4.86,
+      "snaive_wape_pct": 11.93,
+      "snaive_bias_pct": -4.42
+    }
+  },
+  "shipped_actuals_check": {
+    "reconciled_vs_shipped_wape_pct": 35.96,
+    "reconciled_vs_shipped_bias_pct": -4.0,
+    "snaive_vs_shipped_wape_pct": 38.18,
+    "snaive_vs_shipped_bias_pct": -3.56
+  },
+  "interval_calibration": {
+    "target_coverage_pct": 80.0,
+    "calibration_origins": [
+      "2023-09",
+      "2024-03",
+      "2024-09"
+    ],
+    "oos_validation_origin": "2025-03 (2025-04..2026-10)",
+    "sku_conformal_scale_k": 0.95,
+    "sku_level": {
+      "level": "SKU-Region Monthly",
+      "oos_coverage_pct": 82.2,
+      "oos_avg_width_pct_of_actual": 124.5,
+      "n_oos_points": 57830
+    },
+    "aggregate_levels": [
+      {
+        "level": "Global Monthly Total",
+        "oos_coverage_pct": 73.7,
+        "oos_avg_width_pct_of_actual": 25.7,
+        "n_oos_points": 19
+      },
+      {
+        "level": "Product Family Monthly",
+        "oos_coverage_pct": 77.4,
+        "oos_avg_width_pct_of_actual": 39.6,
+        "n_oos_points": 133
+      },
+      {
+        "level": "Region Monthly",
+        "oos_coverage_pct": 71.1,
+        "oos_avg_width_pct_of_actual": 30.1,
+        "n_oos_points": 114
+      },
+      {
+        "level": "Family-Region Monthly",
+        "oos_coverage_pct": 81.0,
+        "oos_avg_width_pct_of_actual": 49.5,
+        "n_oos_points": 798
+      }
+    ]
+  },
+  "what_if_elasticities": {
+    "pmi_pct_per_pt": 0.01033,
+    "auto_yoy_pct_per_pct": 0.00266,
+    "ev_universal_pct_per_pt": -0.00023,
+    "ev_sku_pct_per_pt": -0.00694,
+    "ice_sku_pct_per_pt": -9e-05,
+    "price_pct_per_1pct": -0.01277,
+    "source": "Derived directly from fitted Ridge regression weights w_ml divided by macro training std dev"
+  },
   "calibrated_ramp_up_curve": {
-    "0": 0.205,
-    "1": 0.449,
-    "2": 0.768,
-    "3": 0.877,
-    "4": 0.755,
-    "5": 1.092
+    "0": 0.208,
+    "1": 0.454,
+    "2": 0.785,
+    "3": 0.899,
+    "4": 0.771,
+    "5": 1.119
   },
   "calibrated_ramp_down_curve": {
-    "0": 0.487,
+    "0": 0.492,
     "1": 0.427,
-    "2": 0.537,
-    "3": 0.627
+    "2": 0.52,
+    "3": 0.622
   },
   "reconciliation": {
-    "method": "Proportional Middle-Out (Family-Region) + Largest-Remainder Coherent Integer Rounding",
-    "total_bottom_up_units": 2690526,
-    "total_by_family_sum": 2690526,
-    "total_by_region_sum": 2690526,
-    "total_by_bu_sum": 2690526,
-    "total_by_date_sum": 2690526,
-    "max_hierarchy_discrepancy": 0
+    "method": "90/10 proportional pull toward prior-year same-month Family-Region volume (clipped +/-8%) + largest-remainder integer rounding",
+    "total_bottom_up_units": 2632847,
+    "raw_ensemble_sum_units": 2628652.8,
+    "net_reconciliation_adjustment_pct": 0.16,
+    "max_hierarchy_discrepancy": 0,
+    "additivity_note": "Bottom-up integer rows sum identically across SKU -> Family -> BU -> Region -> Global groupings by construction."
   },
   "forecast_headline": {
     "total_rows": 58219,
-    "total_p10_units": 1206378,
-    "total_p50_units": 2690526,
-    "total_p90_units": 4091839,
-    "total_p50_revenue_usd": 2421712744.88,
-    "total_p90_revenue_usd": 3684482521.18
+    "total_p10_units_global_calibrated": 2534412,
+    "total_p50_units": 2632847,
+    "total_p90_units_global_calibrated": 3199712,
+    "total_p50_revenue_usd": 2366708477.64,
+    "total_p90_revenue_usd_global_calibrated": 2878300224.07,
+    "sku_sum_p90_units_for_sku_level_buffer": 4415502
   }
 }

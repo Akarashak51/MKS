@@ -46,33 +46,54 @@ def main():
         f"{an['total_register_entries'] - an['by_category'].get('Data Error', 0):,} real events/contradictions)"
     )
     print(
+        f"  -> Backorder catch-up removed: -{st['backorder_catchup_units_subtracted']:,.0f} units "
+        f"across {st['backorder_catchup_rows_adjusted']:,} post-backorder months"
+    )
+    print(
         f"  -> Stockouts: {st['recorded_stockout_rows']:,} recorded + "
         f"{st['detected_unrecorded_stockout_rows']:,} detected unrecorded "
-        f"(+{st['total_uplift_units']:,.0f} unconstrained units)"
+        f"(recall={st['detector_validation_recall_overall_pct']}%, "
+        f"general rate={st['general_unrecorded_detection_rate_pct']}%, "
+        f"net uplift=+{st['total_uplift_units']:,.0f} units)"
     )
 
     print("\n[3/4] Workstream 3: Intermittency, Order Cycles, Macro Lead/Lag & EV Shift...")
     fd = run_feature_driver_analysis()
     print(f"  -> SBC classes: {fd['sbc_distribution']}")
     print(f"  -> Order cycles (1=Monthly, 2=Bi-Mo, 3=Quarterly): {fd['cycle_distribution']}")
+    print(f"  -> COVID window excluded: {fd['covid_window_excluded']}")
+    ev = fd["ev_shift"]
     print(
-        f"  -> EV share: {fd['ev_shift']['ev_2019_pct']}% (2019) -> {fd['ev_shift']['ev_2026_pct']}% (2026) "
-        f"| corr with EV_Adoption_Index = {fd['ev_shift']['corr_with_ev_index']}"
+        f"  -> EV share: {ev['ev_2019_pct']}% (2019) -> {ev['ev_2026_pct']}% (2026) "
+        f"| level corr = {ev['level_corr']}, detrended MoM corr = {ev['detrended_corr']}"
     )
 
-    print("\n[4/4] Workstream 4: Rolling-Origin 19M Backtest, Forecasting & Reconciliation...")
+    print("\n[4/4] Workstream 4: 4-Origin 19M Backtest, Forecasting & Reconciliation...")
     fc = run_forecasting()
     for m_name, vals in fc["model_comparison"].items():
-        print(f"  -> {m_name:35s} | WAPE: {vals['WAPE_Pct']:5.2f}% | Bias: {vals['Bias_Pct']:+6.2f}%")
+        print(f"  -> {m_name:48s} | WAPE: {vals['WAPE_Pct']:5.2f}% | Bias: {vals['Bias_Pct']:+6.2f}%")
+    agg = fc["aggregate_accuracy"]
+    print(
+        f"  -> Aggregate WAPE: Global Monthly = {agg['global_monthly_total']['reconciled_wape_pct']}% "
+        f"(vs SN {agg['global_monthly_total']['snaive_wape_pct']}%) | "
+        f"Family-Region Monthly = {agg['family_region_monthly']['reconciled_wape_pct']}% "
+        f"(vs SN {agg['family_region_monthly']['snaive_wape_pct']}%)"
+    )
+    sc = fc["shipped_actuals_check"]
+    print(
+        f"  -> Shipped-actuals check: Reconciled WAPE = {sc['reconciled_vs_shipped_wape_pct']}%, "
+        f"Bias = {sc['reconciled_vs_shipped_bias_pct']:+.2f}%"
+    )
     hl = fc["forecast_headline"]
     print(
-        f"  -> Submission written: {hl['total_rows']:,} rows | P50={hl['total_p50_units']:,} units "
-        f"(${hl['total_p50_revenue_usd']:,.0f}) | P90={hl['total_p90_units']:,} units | "
-        f"Hierarchy discrepancy={fc['reconciliation']['max_hierarchy_discrepancy']}"
+        f"  -> Submission written: {hl['total_rows']:,} rows | "
+        f"P50 = {hl['total_p50_units']:,} units (${hl['total_p50_revenue_usd']:,.0f}) | "
+        f"Calibrated Global P90 = {hl['total_p90_units_global_calibrated']:,} units "
+        f"(SKU-summed P90 = {hl['sku_sum_p90_units_for_sku_level_buffer']:,})"
     )
 
-    print(f"\nPipeline completed in {time.time() - t0:.1f}s.")
-    print("Launch the dashboard with: python3 dashboard/app.py")
+    print(f"\nPipeline completed cleanly in {time.time() - t0:.1f}s.")
+    print("Launch the dashboard with: python3 dashboard/app.py --port 8050")
 
 
 if __name__ == "__main__":

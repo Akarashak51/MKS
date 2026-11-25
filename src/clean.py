@@ -190,6 +190,10 @@ def clean_train(raw_dir: Path, out_dir: Path) -> tuple[pd.DataFrame, dict]:
     sku_master = pd.read_csv(raw_dir / "sku_master.csv", dtype=str)
 
     rows_before = len(train)
+    unique_skus_before = int(train["SKU_ID"].nunique(dropna=False))
+    unique_regions_before = int(train["Region"].nunique(dropna=False))
+    unique_customers_before = int(train["Customer_Name"].nunique(dropna=False))
+    unique_channels_before = int(train["Sales_Channel"].nunique(dropna=False))
     issues = []
 
     # 1. Deduplicate Record_ID keeping latest Load_Timestamp
@@ -274,7 +278,7 @@ def clean_train(raw_dir: Path, out_dir: Path) -> tuple[pd.DataFrame, dict]:
         "issue_type": "inconsistent_sales_channel",
         "category": "Data Error",
         "rows_affected": n_ch_fixed,
-        "action": "Standardized 17 channel variants to 4 canonical labels",
+        "action": f"Standardized {unique_channels_before} raw channel variants to 4 canonical labels",
     })
 
     # 6. Standardize Customer_Name via fuzzy match against canonical test customer list
@@ -288,7 +292,7 @@ def clean_train(raw_dir: Path, out_dir: Path) -> tuple[pd.DataFrame, dict]:
         "issue_type": "customer_name_typos",
         "category": "Data Error",
         "rows_affected": n_cust_fixed,
-        "action": "Standardized 220 customer spelling variants to 12 canonical OEM/distributor names",
+        "action": f"Standardized {unique_customers_before} raw customer spelling variants to 12 canonical OEM/distributor names",
     })
 
     # 7. Standardize Region & recover missing Regions
@@ -360,7 +364,7 @@ def clean_train(raw_dir: Path, out_dir: Path) -> tuple[pd.DataFrame, dict]:
         "issue_type": "inconsistent_region_labels",
         "category": "Data Error",
         "rows_affected": n_reg_variant,
-        "action": "Standardized 30 region label variants to 6 canonical regions",
+        "action": f"Standardized {unique_regions_before} raw region label variants (incl. nulls) to 6 canonical regions",
     })
     issues.append({
         "file": "train.csv",
@@ -519,23 +523,38 @@ def clean_train(raw_dir: Path, out_dir: Path) -> tuple[pd.DataFrame, dict]:
     miss_r = train["Revenue_Clean"].isna() & train["Units_Clean"].notna()
     train.loc[miss_r, "Revenue_Clean"] = np.round(train.loc[miss_r, "Units_Clean"] * train.loc[miss_r, "Price_Clean"], 2)
 
-    # Check any remaining residual mismatches (>1%)
-    rem_valid = train["Units_Clean"].notna() & train["Revenue_Clean"].notna() & (train["Units_Clean"] > 0)
+    # Check any remaining residual mismatches (>1%): verify whether Units_Sold or Revenue_USD was wrong
+    rem_valid = train["Units_Clean"].notna() & train["Revenue_Clean"].notna() & (train["Units_Clean"] > 0) & (train["Price_Clean"] > 0)
     rem_diff = (train.loc[rem_valid, "Units_Clean"] * train.loc[rem_valid, "Price_Clean"] - train.loc[rem_valid, "Revenue_Clean"]).abs()
     rem_rel = rem_diff / (train.loc[rem_valid, "Revenue_Clean"].abs() + 1e-6)
     rem_mis_idx = rem_diff[(rem_diff > 1.0) & (rem_rel > 0.01)].index
     if len(rem_mis_idx) > 0:
-        # Reconcile revenue to Units_Clean * Price_Clean
-        train.loc[rem_mis_idx, "Revenue_Clean"] = np.round(
-            train.loc[rem_mis_idx, "Units_Clean"] * train.loc[rem_mis_idx, "Price_Clean"], 2
-        )
-        add_flag(train.index.isin(rem_mis_idx), "revenue_reconciled")
+        sr_med = train[train["Units_Clean"] > 0].groupby(["SKU_Clean", "Region_Clean"])["Units_Clean"].median().to_dict()
+        u_fixed_idx, r_fixed_idx = [], []
+        for idx in rem_mis_idx:
+            u_cur = float(train.at[idx, "Units_Clean"])
+            p_cur = float(train.at[idx, "Price_Clean"])
+            r_cur = float(train.at[idx, "Revenue_Clean"])
+            med_u = sr_med.get((train.at[idx, "SKU_Clean"], train.at[idx, "Region_Clean"]), u_cur)
+            u_implied = r_cur / p_cur
+            is_exact_int = abs(u_implied - round(u_implied)) < 0.02 and u_implied >= 0
+            # If R/P is an exact integer AND strictly closer to the SKU-Region median than U, Units was wrong
+            if is_exact_int and abs(round(u_implied) - med_u) < abs(u_cur - med_u):
+                train.at[idx, "Units_Clean"] = float(round(u_implied))
+                u_fixed_idx.append(idx)
+            else:
+                train.at[idx, "Revenue_Clean"] = round(u_cur * p_cur, 2)
+                r_fixed_idx.append(idx)
+        if u_fixed_idx:
+            add_flag(train.index.isin(u_fixed_idx), "residual_units_fixed_from_rev")
+        if r_fixed_idx:
+            add_flag(train.index.isin(r_fixed_idx), "revenue_reconciled")
         issues.append({
             "file": "train.csv",
-            "issue_type": "residual_revenue_mismatch",
+            "issue_type": "residual_upr_mismatch",
             "category": "Data Error",
             "rows_affected": int(len(rem_mis_idx)),
-            "action": "Reconciled residual Revenue_USD mismatches to Units_Clean * Price_Clean",
+            "action": f"Checked implied R/P against SKU-Region median: fixed Units on {len(u_fixed_idx)} rows, fixed Revenue on {len(r_fixed_idx)} rows",
         })
 
     # 9. Ensure 1 clean row per (Date_Clean, SKU_Clean, Region_Clean)
@@ -661,11 +680,12 @@ def clean_train(raw_dir: Path, out_dir: Path) -> tuple[pd.DataFrame, dict]:
         "rows_after_dedup": int((~clean_df["Is_Missing_Row"]).sum()),
         "rows_after_panel_completion": len(clean_df),
         "missing_panel_rows_added": len(missing_rows),
-        "unique_skus_before": int(pd.read_csv(raw_dir / "train.csv", usecols=["SKU_ID"])["SKU_ID"].nunique()),
+        "unique_skus_before": unique_skus_before,
         "unique_skus_after": int(clean_df["SKU_ID"].nunique()),
-        "unique_regions_before": 30,
+        "unique_regions_before": unique_regions_before,
         "unique_regions_after": int(clean_df["Region"].nunique()),
-        "unique_customers_before": 220,
+        "unique_customers_before": unique_customers_before,
+        "unique_channels_before": unique_channels_before,
         "unique_customers_after": int(clean_df["Customer_Name"].nunique()),
         "reconciliation_mismatches_before": init_mismatch,
         "reconciliation_mismatches_after": after_mismatch,
