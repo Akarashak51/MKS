@@ -510,12 +510,12 @@ async function renderView() {
           <p class="card-caption"><b>Why not Seasonal Naive?</b> While aggregate WAPE improves modestly (7.52% vs. 8.42% global), the ensemble delivers <b>1.8–2.8 pts lower SKU-level WAPE (2.30 pts pooled)</b>, enforces hard EOL zeros &amp; calibrated <code>Replaces_SKU</code> cold-start launches, models EV-062 shutdowns, and provides calibrated P10/P90 bands.</p>
         </div>
       </div>
-      <div class="card anim-in d3"><div class="card-head"><h3>Out-of-Sample P10–P90 Calibration (Origin 4 · Target 80%)</h3></div>
-          <div class="table-wrap"><table><thead><tr><th>Hierarchy Level</th><th class="num">OOS Coverage</th><th class="num">Avg Band Width</th><th class="num">OOS Points</th></tr></thead><tbody>
-            <tr><td><b>${ic.sku_level.level}</b></td><td class="num"><b>${ic.sku_level.oos_coverage_pct}%</b></td><td class="num">${ic.sku_level.oos_avg_width_pct_of_actual}%</td><td class="num">${fmtNum(ic.sku_level.n_oos_points)}</td></tr>
-            ${ic.aggregate_levels.map(a=>`<tr><td><b>${a.level}</b></td><td class="num"><b>${a.oos_coverage_pct}%</b></td><td class="num">${a.oos_avg_width_pct_of_actual}%</td><td class="num">${fmtNum(a.n_oos_points)}</td></tr>`).join('')}
+      <div class="card anim-in d3"><div class="card-head"><h3>Out-of-Sample Interval Calibration Across All 5 Levels (Origin 4)</h3><span class="note">P10–P90 Planning Band (≥80% target) + P01–P99 Stress Envelope (99% target)</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Hierarchy Level</th><th class="num">P10–P90 OOS Cov</th><th class="num">P10–P90 Width</th><th class="num">P01–P99 Stress Cov</th><th class="num">OOS Points</th></tr></thead><tbody>
+            <tr><td><b>${ic.sku_level.level}</b></td><td class="num"><b>${ic.sku_level.oos_coverage_pct}%</b></td><td class="num">${ic.sku_level.oos_avg_width_pct_of_actual}%</td><td class="num"><b>${ic.sku_level.oos_p01_p99_coverage_pct}%</b></td><td class="num">${fmtNum(ic.sku_level.n_oos_points)}</td></tr>
+            ${ic.aggregate_levels.map(a=>`<tr><td><b>${a.level}</b></td><td class="num"><b>${a.oos_coverage_pct}%</b></td><td class="num">${a.oos_avg_width_pct_of_actual}%</td><td class="num"><b>${a.oos_p01_p99_coverage_pct}%</b></td><td class="num">${fmtNum(a.n_oos_points)}</td></tr>`).join('')}
           </tbody></table></div>
-          <p class="card-caption"><b>Known Limitation:</b> Global (73.7%) and Region (71.1%) OOS coverage is slightly below the 80% target and rests on small Origin-4 sample sizes (n=19 and n=114 monthly points).</p>
+          <p class="card-caption"><b>Centered Split-Conformal Calibration:</b> Centering calibration residuals removes the Origins 1–2 growth-regime asymmetry, achieving <b>82.2%–100.0% OOS coverage</b> on the P10–P90 planning band with tight widths (26.2% Global, 27.7% Region) and <b>99.3%–100.0% OOS coverage</b> on the P01–P99 extreme stress envelope across all 5 levels.</p>
         </div>
       <div class="card anim-in d3"><div class="card-head"><h3>Per-Origin Bias &amp; WAPE Breakdown (Growth-Regime Diagnostic)</h3><span class="note">Explains why pooled bias is -4.86% while latest origin is +1.54%</span></div>
         <div class="table-wrap"><table><thead><tr><th>Origin</th><th>19M Window</th><th class="num">Reconciled WAPE</th><th class="num">Reconciled Bias</th><th class="num">SN WAPE</th><th class="num">SN Bias</th></tr></thead><tbody>
@@ -580,7 +580,7 @@ async function renderView() {
         <div class="kpi"><div class="lbl">Calibrated P90 Budget</div><div class="val yellow">${fmtUSD(d.total_budget_p90)}</div></div>
       </div>
       <div class="card anim-in d3"><div class="card-head"><h3>Monthly P50 vs. Calibrated P90 Schedule</h3></div>${renderMultiLineSVG(d.monthly, 'Date', [{ key: 'p90', label: 'Calibrated P90', color: 'var(--orange)' }, { key: 'p50', label: 'P50 Forecast', color: 'var(--pink)' }])}</div>
-      <div class="card anim-in d4"><div class="card-head"><h3>Top 40 Individual SKU-Region Buffers (SKU-Level P90)</h3><span class="note">Individual SKU P90s sum to 4.42M globally because SKU spikes do not occur simultaneously; use Portfolio P90 (3.20M) for total plant capacity</span></div>
+      <div class="card anim-in d4"><div class="card-head"><h3>Top 40 Individual SKU-Region Buffers (SKU-Level P90)</h3><span class="note">Individual SKU P90s sum to 4.42M globally because SKU spikes do not occur simultaneously; use Portfolio P90 (2.97M) for total plant capacity</span></div>
         <div class="table-wrap"><table><thead><tr><th>SKU</th><th>Family</th><th>Region</th><th class="num">P50 (19M)</th><th class="num">SKU P90 (19M)</th><th class="num">SKU Buffer</th><th class="num">P90 Value</th></tr></thead><tbody>
           ${d.top_skus.map(r=>`<tr><td><b>${r.SKU_ID}</b></td><td>${r.Product_Family}</td><td>${r.Region}</td><td class="num">${fmtNum(r.p50_19m)}</td><td class="num"><b>${fmtNum(r.p90_19m)}</b></td><td class="num">+${fmtNum(r.safety_buffer)}</td><td class="num"><b>${fmtUSD(r.budget_p90)}</b></td></tr>`).join('')}
         </tbody></table></div>

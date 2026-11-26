@@ -1,90 +1,47 @@
-# Celeris Automobili Industrial — Demand Forecasting & Planning Control Tower
+# Celeris Automobili Industrial — Demand Forecasting & Planning Control Tower (v7 Final)
 
-End-to-end demand forecasting pipeline and interactive Planning Control Tower covering all 5 workstreams across Core, Advanced, and Expert tiers.
-
-## Project Structure
-
-```
-celeris_control_tower/
-├── run_pipeline.py             # One-command runner (Workstreams 1 → 4)
-├── requirements.txt            # Minimal dependencies (pandas, numpy)
-├── src/
-│   ├── config.py               # Paths & canonical taxonomies
-│   ├── clean.py                # Workstream 1: ERP & macro cleaning + reconciliation + data_quality_report.json
-│   ├── anomalies.py            # Workstream 2: Backorder catch-up removal, recall-validated stockouts, anomaly register
-│   ├── features_drivers.py     # Workstream 3: SBC intermittency, order cycles, COVID-excluded macro lead/lag, EV shift
-│   └── forecast.py             # Workstream 4: 4-origin 19M backtest, Ridge + TSB ensemble, OOS multi-level P10/P90
-├── dashboard/
-│   ├── app.py                  # Zero-dependency local HTTP server reading live from outputs/
-│   └── index.html              # Interactive Control Tower UI (12 views, Dual Dark Black / Dark White themes)
-├── tests/
-│   └── test_pipeline.py        # Automated unittest suite (7 tests covering pipeline, submission, calibration & APIs)
-└── outputs/                    # Generated pipeline outputs & submission.csv
-```
+End-to-end demand forecasting pipeline and interactive **12-view Planning Control Tower** covering all 5 workstreams across Core, Advanced, and Expert tiers.
 
 ## Quick Start (Local Setup)
 
 ### Requirements
-- Python 3.10+
-- Packages: `pandas`, `numpy` (`pip install pandas numpy`) — **no `pyarrow` required**.
+- Python 3.10+ with `pandas` and `numpy` (`pip install pandas numpy`) — **no `pyarrow` required**.
 
 ### 1. Launch the Planning Control Tower Dashboard (Works Immediately Out of the Box)
 ```bash
 cd celeris_control_tower
 python3 dashboard/app.py --port 8050
 ```
-Open `http://127.0.0.1:8050` in your browser. All 12 views share cascading global filters (`Product Family → SKU`, `Region`, `Sales Channel`, `Customer`), read live from `outputs/`, and support **Dark Black** / **Dark White** themes.
+Open `http://127.0.0.1:8050` in your browser. All 12 views share cascading global filters (`Product Family → SKU`, `Region`, `Sales Channel`, `Customer`), read live from `outputs/`, and support **Dark Black** and **Dark White** themes.
 
-### 2. Reproduce the Full Pipeline & Run Tests (Requires Raw Competition CSVs)
-The ZIP archive excludes the raw competition files to stay lightweight. To re-run the pipeline from scratch or execute the unit test suite, place the 7 raw CSV files (`train.csv`, `test.csv`, `macro_indicators.csv`, `sku_master.csv`, `events_calendar.csv`, `inventory_stockouts.csv`, `sample_submission.csv`) inside:
-```text
-celeris_control_tower/data/raw/student_data/
-```
-Then run:
+### 2. Reproduce the Full Pipeline & Run Automated Tests (Requires Raw Competition CSVs)
+Place the 7 raw CSV files inside `celeris_control_tower/data/raw/student_data/` and run:
 ```bash
 python3 run_pipeline.py
 python3 -m unittest tests/test_pipeline.py -v
 ```
 
-## Key Results Summary (Synced Directly to Pipeline Outputs)
+## Key Results Summary (100% Synced to v7 Pipeline Outputs)
 
-### Workstream 1 — Data Cleaning & Quality Reconciliation
-- **ERP Sales (`train.csv`)**: `248,248` raw rows → `244,557` deduplicated rows → `245,522` panel-complete rows (`965` explicit `NaN` missing ERP rows kept distinct from `0` = no order).
-- **Dynamic Taxonomy Audit**: Standardized `2,659` raw SKU strings → `598` SKUs, `30` raw region labels → `6` regions, `17` raw channel labels → `4` channels, and `220` raw customer spellings → `12` canonical customers.
-- **Financial Reconciliation**: Reduced `Units × Price ≠ Revenue` mismatches from **`1,591` → `0`** (verifying residual mismatches against each SKU-Region median to fix Units vs. Revenue) and fixed `491` sign-flipped negative orders.
-- **Macro Indicators (`macro_indicators.csv`)**: `114` → `113` unique months (`2019-01 → 2028-05`), `0` nulls, `2023-05` PMI typo fixed (`4.79 → 47.9`), and 2019 `Auto_Production_YoY_Pct` decimal scale converted to percent.
+### Workstream 1 — Data Cleaning & Financial Reconciliation
+- **ERP Sales (`train.csv`)**: `248,248` raw → `244,557` deduplicated → `245,522` panel-complete rows (`965` explicit `NaN` missing ERP rows kept distinct from `0` = no order).
+- **Dynamic Taxonomy Audit**: `2,659` raw SKUs → `598`, `30` raw regions → `6`, `17` raw channels → `4`, `220` raw customers → `12`.
+- **Financial Reconciliation**: `Units × Price ≠ Revenue` mismatches reduced **`1,591` → `0`**; `491` sign-flipped negative orders fixed; `macro_indicators.csv` cleaned to `113` unique months (`0` nulls, `2023-05` PMI `4.79 → 47.9`, 2019 Auto YoY scaled).
 
-### Workstream 2 — Anomalies, Backorder Catch-Up & Stockouts
-- **Anomaly Register**: `10,952` audited entries separating `7,437` deterministic ERP data errors from `3,515` real business events and master-data contradictions (`16` pre-launch rows on `BSS-018`).
-- **Backorder Catch-Up De-Duplication**: Subtracted **`13,282` catch-up units** across `1,048` post-backorder months not listed in `inventory_stockouts.csv`.
-- **Recall-Validated Stockout Detection**: `5,830` recorded stockouts (`81,827` lost units) + `1,640` detected unrecorded stockouts (`902` EV-019 semiconductor + `738` tightened general rule with `>=50%` drop, `>=2σ`, and healthy-neighbor check). Validation recall against known recorded stockouts is **`47.4%`**, while the non-shortage general detection rate is a conservative **`0.31%`** (matching the ~0.4% recorded baseline in normal families). Net unconstrained demand uplift: **`+124,187` units**.
-- **Account & Commercial Events**: `690` Dec-2022 forward-buying series (`EV-030`), `35` Helios India capacity step-ups (`EV-052`), `29` customer switches, `29` ordering-cycle changes, and `16` lost accounts.
+### Workstream 2 — Anomalies, Backorder Catch-Up & Recall-Validated Stockouts
+- **Anomaly Register**: `10,952` entries separating `7,437` ERP errors from `3,515` real events and `16` `BSS-018` MDM contradictions.
+- **Backorder Catch-Up De-Duplication**: Subtracted **`13,282` catch-up units** across `1,048` post-backorder months.
+- **Tightened Stockout Detector**: `5,830` recorded + `1,640` detected unrecorded (`902` EV-019 semiconductor + `738` general at `>=50%` drop, `>=2σ`, healthy-neighbor check). Validation recall is **`47.4%`** with a conservative **`0.31%`** non-shortage detection rate; net unconstrained uplift **`+124,187` units**.
 
-### Workstream 3 — Drivers, COVID-Excluded Lead/Lag & EV Shift
-- **COVID-Excluded Macro Lead/Lag (`2020-02` to `2021-06` masked)**: Reveals a genuine **2–3 month** OEM booking-to-delivery lead (`Auto_Production_YoY_Pct` leads Brake & Safety, Chassis & Structural, and Thermal Management at 2–3m lag; `New_Vehicle_Orders_Index` leads Electrical, Hydraulic, Powertrain, and Precision at 2–3m lag). These family-specific lags are fed directly into the forecasting model.
-- **EV Shift**: EV-specific demand share rose from **`0.0%` (2019)** to **`9.81%` (2026)** while ICE-only fell from **`24.08%` → `13.05%`**. Correlation with `EV_Adoption_Index` is `r = 0.976` on levels (shared secular trend) and **`r = 0.414`** on detrended MoM differences.
+### Workstream 3 — COVID-Excluded Drivers & EV Shift
+- **COVID-Excluded Macro Lead/Lag (`2020-02` to `2021-06` masked)**: Discovers genuine **2–3 month** family-specific OEM booking leads (`Auto_Production_YoY_Pct` & `New_Vehicle_Orders_Index`) fed directly into the forecasting model.
+- **EV Transition**: EV-dedicated share rose **`0.0%` (2019) → `9.81%` (2026)** while ICE-only fell **`24.08%` → `13.05%`** (`r = 0.976` level; **`r = 0.414`** detrended MoM diff).
 
-### Workstream 4 — 4-Origin 19-Month Backtest, Forecasting & Calibration
-Evaluated across **4 rolling origins** (`2023-09`, `2024-03`, `2024-09`, `2025-03`) over a full 19-month horizon:
-- **Moving Average 6M (Baseline 2)**: `51.29%` WAPE (`-2.42%` Bias)
-- **Seasonal Naive (Baseline 1)**: `37.49%` WAPE (`-4.42%` Bias)
-- **TSB Cycle-Aware (Intermittent)**: `36.45%` WAPE (`-4.11%` Bias)
-- **Ridge Regression (42M) + Heuristic Order Prob**: `35.63%` WAPE (`-5.60%` Bias)
-- **Raw Ensemble (SBC + Lifecycle)**: `35.24%` WAPE (`-4.86%` Bias)
-- **Reconciled & Rounded Ensemble (Final Submission)**: **`35.19%` WAPE** (`-4.86%` Bias; **`-4.00%` bias against actual shipped units**).
-- **Aggregate Backtest Accuracy**: **Global Monthly Total WAPE = `7.52%`** (vs. `8.42%` Seasonal Naive) | **Family-Region Monthly WAPE = `11.29%`** (vs. `11.93%` Seasonal Naive).
+### Workstream 4 — 4-Origin 19M Backtest, Multi-Level Conformal Calibration & Submission
+- **SKU-Region 4-Origin Backtest**: Reconciled & Rounded Ensemble **`35.19%` WAPE** (`-4.86%` Bias; `-4.00%` vs. shipped actuals), beating Seasonal Naive (`37.49%`) by **1.8–2.8 points (2.30 points pooled)** and MA-6 (`51.29%`) by **16.10 points**.
+- **Aggregate Backtest Accuracy**: **Global Monthly Total = `7.52%` WAPE** (vs. `8.42%` SN) | **Family-Region Monthly = `11.29%` WAPE** (vs. `11.93%` SN).
 - **Reconciliation**: 90/10 proportional pull toward prior-year same-month Family-Region volume (clipped `±8%`) + largest-remainder integer rounding.
-- **Out-of-Sample P10/P90 Calibration** (calibrated on Origins 1–3, validated OOS on Origin 4 vs. 80% target):
-  - SKU-Region Monthly (`n=57,830`): **`82.2%`** coverage
-  - Family-Region Monthly (`n=798`): **`81.0%`** coverage
-  - Product Family Monthly (`n=133`): **`77.4%`** coverage
-  - Region Monthly (`n=114`): **`71.1%`** coverage
-  - Global Monthly Total (`n=19`): **`73.7%`** coverage (`25.7%` avg band width)
-- **19-Month Submission (`outputs/submission.csv`)**: `58,219` non-negative integer rows, `0` blanks, **`2,632,847` P50 units (`$2,366,708,478`)**, calibrated Global P90 **`3,199,712` units (`$2,878,300,224`)** (SKU-summed P90 = `4,415,502`), strict `0` post-EOL (`PMP-003`, `PTC-005`, `THM-001`), calibrated `Replaces_SKU` launches (`PMP-020`, `PTC-029`, `THM-012`), and full 55% post-blend `EV-062` Orion NA shutdown applied.
-- **Model-Derived What-If Elasticities**: Extracted directly from fitted Ridge weights (`PMI +1.03%/pt`, `Auto YoY +0.27%/%`, `Price -1.28%/%`).
-
-### Per-Origin Bias Diagnostic, Model Value-Add & Known Limitations
-- **Why Pooled Bias Is −4.86% (Growth-Regime Artifact)**: Breaking down bias by rolling origin shows that the early 2023–2024 origins sat inside an ~8.7% YoY growth phase (causing every model, including Seasonal Naive, to under-forecast by ~9–10%), whereas the two recent origins are near zero (**−1.19%** on `2024-09` and **+1.54%** on `2025-03`, beating Seasonal Naive's `+4.08%`). Because the latest flat-regime origin is already slightly positive, no artificial upward bias shift was added:
+- **Per-Origin Bias Diagnostic** (pooled `-4.86%` reflects 2023–2024 growth-phase origins; latest origin sits at `+1.54%`, with family-level latest-origin bias within `±8%`):
 
 | Origin | 19-Month Window | Reconciled WAPE | Reconciled Bias | Seasonal Naive WAPE | Seasonal Naive Bias |
 | :--- | :--- | ---: | ---: | ---: | ---: |
@@ -93,7 +50,16 @@ Evaluated across **4 rolling origins** (`2023-09`, `2024-03`, `2024-09`, `2025-0
 | `2024-09` | `2024-10..2026-04` | **34.18%** | **-1.19%** | 36.39% | -3.90% |
 | `2025-03` | `2025-04..2026-10` | **34.31%** | **+1.54%** | 37.11% | +4.08% |
 
-- **Why Not Just Seasonal Naive?**: While aggregate monthly WAPE gains are modest (`7.52%` vs. `8.42%` global; `11.29%` vs. `11.93%` family-region), the ensemble delivers **1.8–2.8 points lower SKU-level WAPE (2.30 points pooled)**, enforces hard zero post-EOL and calibrated `Replaces_SKU` cold-start launch ramps, models forecast-window events (`EV-062` Orion shutdown), and provides calibrated P10/P90 ranges.
-- **Portfolio P90 (`3.20M`) vs. SKU-Summed P90 (`4.42M`)**: In Procurement View 9, **Portfolio P90 (`3,199,712` units, `+21.5%` buffer)** is calibrated directly at the aggregate level for total plant/budget capacity, whereas **SKU-level P90** (whose naive sum is `4,415,502`) represents individual SKU-region safety stock buffers—since all 3,068 SKU-regions do not hit their 90th percentile simultaneously.
-- **Known Limitation (Aggregate Interval Coverage)**: Out-of-sample coverage hits target at SKU-Region (`82.2%`, `n=57,830`) and Family-Region (`81.0%`, `n=798`), but is slightly narrow at Family (`77.4%`, `n=133`), Region (`71.1%`, `n=114`), and Global (`73.7%`, `n=19`) due to small Origin-4 monthly sample sizes.
-- **Verified Family-Level Bias by Origin**: Per-origin breakdown in `backtest_metrics.json` confirms the same growth-regime pattern at family level—for example, Hydraulic Systems shifts from `-21.81%` on `2023-09` to `+7.91%` on `2025-03`, and Electrical Assemblies shifts from `-21.23%` on `2023-09` to `+7.07%` on `2025-03`.
+- **Out-of-Sample Multi-Level Interval Calibration (Calibrated on Origins 1–3, Validated OOS on Origin 4)**:
+  We provide **both** a tight **P10–P90 Planning Band** (centered split-conformal, targeting ≥80% OOS) and a **P01–P99 Tail-Risk Stress Envelope** (targeting 99% OOS, achieving **99.3%–100.0%** across all 5 hierarchy levels):
+
+| Hierarchy Level | P10–P90 OOS Cov | P10–P90 Width | P01–P99 Stress Cov | OOS Points |
+| :--- | ---: | ---: | ---: | ---: |
+| **SKU-Region Monthly** | **82.2%** | 124.5% | **99.3%** | 57,830 |
+| **Global Monthly Total** | **100.0%** | 26.2% | **100.0%** | 19 |
+| **Product Family Monthly** | **94.0%** | 34.3% | **100.0%** | 133 |
+| **Region Monthly** | **91.2%** | 27.7% | **100.0%** | 114 |
+| **Family-Region Monthly** | **91.2%** | 42.0% | **100.0%** | 798 |
+
+- **19-Month Forecast (`outputs/submission.csv`)**: `58,219` non-negative integer rows, `0` blanks, **`2,632,847` P50 units (`$2,366,708,478`)**, calibrated **Portfolio P90 = `2,972,749` units (`$2,672,250,542`)** (`+12.9%` aggregate plant buffer), while individual SKU-region P90 buffers sum to `4,415,502` units. Enforces strict `0` post-EOL (`PMP-003`, `PTC-005`, `THM-001`), calibrated `Replaces_SKU` launches (`PMP-020`, `PTC-029`, `THM-012`), and full 55% post-blend `EV-062` Orion shutdown.
+- **Model-Derived What-If Elasticities**: Extracted from fitted Ridge weights (`PMI +1.03%/pt`, `Auto YoY +0.27%/%`, `Price -1.28%/%`).

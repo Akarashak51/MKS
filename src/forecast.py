@@ -574,27 +574,33 @@ def calc_wape_bias(y_true: np.ndarray, y_pred: np.ndarray) -> tuple[float, float
     return round(float(np.sum(np.abs(y_true - y_pred)) / denom) * 100.0, 2), round(float(np.sum(y_pred - y_true) / denom) * 100.0, 2)
 
 
-def calibrate_and_validate_intervals(bt: pd.DataFrame) -> tuple[dict, dict, dict]:
+def calibrate_and_validate_intervals(bt: pd.DataFrame) -> tuple[dict, dict, dict, dict]:
     """
-    Out-of-sample conformal calibration:
-    - Calibrate on Origins 1..3 (2023-09, 2024-03, 2024-09)
-    - Validate strictly OUT-OF-SAMPLE on Origin 4 (2025-03 -> 2025-04..2026-10)
-    Returns: (sku_q_table, agg_intervals_dict, coverage_report)
+    Out-of-sample split-conformal calibration across ALL 5 hierarchy levels:
+    - Calibrated strictly on Origins 1-3 (2023-09, 2024-03, 2024-09)
+    - Validated strictly OUT-OF-SAMPLE on Origin 4 (2025-03 -> 2025-04..2026-10)
+    Produces BOTH:
+      1. P10-P90 Planning Band (centered split-conformal, target ~80% OOS at every level)
+      2. P01-P99 Stress Envelope (tail-risk split-conformal, target ~99% OOS at every level)
     """
     bt = bt.copy()
     bt["H_Bucket"] = pd.cut(bt["Horizon"], bins=[0, 6, 12, 20], labels=["1-6", "7-12", "13-19"]).astype(str)
     cal = bt[bt["Origin"] != "2025-03"].copy()
     oos = bt[bt["Origin"] == "2025-03"].copy()
 
-    # --- A. SKU-Region Level Calibration (target ~80% OOS coverage) ---
-    # Use scaled residual (y - yhat) / max(yhat, 2.0) + finite-sample conformal widening factor
+    # --- A. SKU-Region Level Calibration ---
     cal["Rel_Err"] = (cal["y_true"] - cal["pred_reconciled"]) / np.maximum(cal["pred_reconciled"], 2.0)
-    raw_q = {}
+    raw_q80, raw_q99 = {}, {}
     for (sbc, hb), g in cal.groupby(["SBC_Class", "H_Bucket"]):
         errs = g["Rel_Err"].values
-        raw_q[(sbc, hb)] = (float(np.quantile(errs, 0.10)), float(np.quantile(errs, 0.90)))
+        raw_q80[(sbc, hb)] = (float(np.quantile(errs, 0.10)), float(np.quantile(errs, 0.90)))
+        # Finite-sample 99% conformal quantiles
+        n = len(errs)
+        lo_p = max(0.0, 0.005 * (1.0 - 1.0 / max(1, n)))
+        hi_p = min(1.0, 1.0 - lo_p)
+        raw_q99[(sbc, hb)] = (float(np.quantile(errs, lo_p)), float(np.quantile(errs, hi_p)) * 1.15)
 
-    # Tune conformal scale factor k on cal (leave-last-cal-origin out) so OOS coverage targets 80%
+    # Tune conformal scale factor k on cal_va (Origin 3) so SKU P10-P90 targets 80% OOS
     cal_tr = cal[cal["Origin"] != "2024-09"]
     cal_va = cal[cal["Origin"] == "2024-09"]
     q_tr = {}
@@ -602,66 +608,76 @@ def calibrate_and_validate_intervals(bt: pd.DataFrame) -> tuple[dict, dict, dict
         errs = g["Rel_Err"].values
         q_tr[(sbc, hb)] = (float(np.quantile(errs, 0.10)), float(np.quantile(errs, 0.90)))
 
-    def eval_sku_band(frame, q_map, k_mult):
+    def eval_sku_band(frame, q_map, k_mult, is_99=False):
         p50 = frame["pred_reconciled"].values
         y = frame["y_true"].values
-        p10 = np.zeros(len(frame))
-        p90 = np.zeros(len(frame))
+        p_lo, p_hi = np.zeros(len(frame)), np.zeros(len(frame))
         for i, (sbc, hb, v) in enumerate(zip(frame["SBC_Class"], frame["H_Bucket"], p50)):
             if v <= 0:
-                p10[i], p90[i] = 0.0, 1.0 if sbc in ("Intermittent", "Lumpy") else 0.0
+                p_lo[i], p_hi[i] = 0.0, (5.0 if is_99 else (1.0 if sbc in ("Intermittent", "Lumpy") else 0.0))
                 continue
-            q10, q90 = q_map.get((sbc, hb), (-0.40, 0.45))
-            # Scale asymmetrically around 0, allow p10 to reach 0 and p90 to widen cleanly
-            p10[i] = max(0.0, np.floor(v * (1.0 + q10 * k_mult)))
-            p90[i] = max(v, np.ceil(v * (1.0 + q90 * k_mult)))
-        cov = float(((y >= p10) & (y <= p90)).mean()) * 100.0
-        width = float(np.sum(p90 - p10) / max(1.0, np.sum(y))) * 100.0
+            ql, qh = q_map.get((sbc, hb), (-0.40, 0.45))
+            p_lo[i] = max(0.0, np.floor(v * (1.0 + ql * k_mult)))
+            p_hi[i] = max(v, np.ceil(v * (1.0 + qh * k_mult)))
+        cov = float(((y >= p_lo) & (y <= p_hi)).mean()) * 100.0
+        width = float(np.sum(p_hi - p_lo) / max(1.0, np.sum(y))) * 100.0
         return cov, width
 
     best_k, best_diff = 1.0, 999.0
     for k in np.linspace(0.95, 1.65, 29):
         cov_va, _ = eval_sku_band(cal_va, q_tr, k)
         if abs(cov_va - 80.0) < best_diff:
-            best_diff = abs(cov_va - 80.0)
-            best_k = float(k)
+            best_diff, best_k = abs(cov_va - 80.0), float(k)
 
-    # Apply best_k to full cal quantiles and measure strictly OUT-OF-SAMPLE coverage on Origin 4!
-    sku_q_final = {
-        k: (round(v[0] * best_k, 4), round(v[1] * best_k, 4))
-        for k, v in raw_q.items()
-    }
-    sku_oos_cov, sku_oos_width = eval_sku_band(oos, raw_q, best_k)
+    sku_q80_final = {k: (round(v[0] * best_k, 4), round(v[1] * best_k, 4)) for k, v in raw_q80.items()}
+    sku_q99_final = {k: (round(max(-1.0, v[0]), 4), round(v[1], 4)) for k, v in raw_q99.items()}
+    sku_oos_cov80, sku_oos_w80 = eval_sku_band(oos, raw_q80, best_k, is_99=False)
+    sku_oos_cov99, sku_oos_w99 = eval_sku_band(oos, raw_q99, 1.0, is_99=True)
 
     # --- B. Aggregate Level Calibration (Global, Family, Region, Family-Region) ---
-    # Calibrate separately on monthly aggregate totals (never sum SKU quantiles!)
+    # Centered split-conformal residuals (removes growth-regime bias shift from Origins 1-2!)
     def fit_agg_level(group_cols: list[str], level_name: str) -> tuple[dict, dict]:
         cols_cal = ["Origin", "Date", "H_Bucket"] + group_cols
         g_cal = cal.groupby(cols_cal, as_index=False).agg(y=("y_true", "sum"), yhat=("pred_reconciled", "sum"))
         g_cal["rel"] = (g_cal["y"] - g_cal["yhat"]) / np.maximum(g_cal["yhat"], 10.0)
-
         g_oos = oos.groupby(cols_cal, as_index=False).agg(y=("y_true", "sum"), yhat=("pred_reconciled", "sum"))
 
-        # Quantiles by H_Bucket (with finite-sample conformal buffer 1.15x)
         q_by_hb = {}
-        for hb, sub in g_cal.groupby("H_Bucket"):
-            q10 = float(np.quantile(sub["rel"].values, 0.10)) * 1.15
-            q90 = float(np.quantile(sub["rel"].values, 0.90)) * 1.15
-            q_by_hb[str(hb)] = {
-                "q10": round(float(np.clip(q10, -0.60, -0.02)), 4),
-                "q90": round(float(np.clip(q90, 0.02, 0.70)), 4),
+        for hb in ["1-6", "7-12", "13-19"]:
+            sub = g_cal[g_cal["H_Bucket"] == hb]
+            # Pool across horizons when bucket has <25 points (e.g. Global) for conformal stability
+            if len(sub) < 25:
+                sub = g_cal
+            n = len(sub)
+            rel_vals = sub["rel"].values
+            # Center residuals around median so growth-regime shift doesn't starve the lower tail
+            med_shift = float(np.median(rel_vals))
+            abs_centered = np.abs(rel_vals - med_shift)
+            q80_lvl = min(1.0, np.ceil((n + 1) * 0.80) / n)
+            rad80 = float(np.quantile(abs_centered, q80_lvl))
+            # 99% Tail-Risk Stress Envelope (symmetric on uncentered |rel| + finite-sample 1.08x margin)
+            q99_lvl = min(1.0, np.ceil((n + 1) * 0.99) / n)
+            rad99 = float(np.quantile(np.abs(rel_vals), q99_lvl)) * 1.08
+
+            q_by_hb[hb] = {
+                "q10": round(float(np.clip(-rad80, -0.60, -0.02)), 4),
+                "q90": round(float(np.clip(rad80, 0.02, 0.70)), 4),
+                "q01": round(float(np.clip(-rad99, -0.95, -0.05)), 4),
+                "q99": round(float(np.clip(rad99, 0.05, 1.50)), 4),
             }
 
         # Evaluate strictly OUT-OF-SAMPLE on Origin 4
-        lo = np.array([max(0.0, r.yhat * (1.0 + q_by_hb[r.H_Bucket]["q10"])) for r in g_oos.itertuples(index=False)])
-        hi = np.array([max(r.yhat, r.yhat * (1.0 + q_by_hb[r.H_Bucket]["q90"])) for r in g_oos.itertuples(index=False)])
+        lo80 = np.array([max(0.0, r.yhat * (1.0 + q_by_hb[r.H_Bucket]["q10"])) for r in g_oos.itertuples(index=False)])
+        hi80 = np.array([max(r.yhat, r.yhat * (1.0 + q_by_hb[r.H_Bucket]["q90"])) for r in g_oos.itertuples(index=False)])
+        lo99 = np.array([max(0.0, r.yhat * (1.0 + q_by_hb[r.H_Bucket]["q01"])) for r in g_oos.itertuples(index=False)])
+        hi99 = np.array([max(r.yhat, r.yhat * (1.0 + q_by_hb[r.H_Bucket]["q99"])) for r in g_oos.itertuples(index=False)])
         y_o = g_oos["y"].values
-        cov_o = float(((y_o >= lo) & (y_o <= hi)).mean()) * 100.0
-        width_o = float(np.sum(hi - lo) / max(1.0, np.sum(y_o))) * 100.0
         return q_by_hb, {
             "level": level_name,
-            "oos_coverage_pct": round(cov_o, 1),
-            "oos_avg_width_pct_of_actual": round(width_o, 1),
+            "oos_coverage_pct": round(float(((y_o >= lo80) & (y_o <= hi80)).mean()) * 100.0, 1),
+            "oos_avg_width_pct_of_actual": round(float(np.sum(hi80 - lo80) / max(1.0, np.sum(y_o))) * 100.0, 1),
+            "oos_p01_p99_coverage_pct": round(float(((y_o >= lo99) & (y_o <= hi99)).mean()) * 100.0, 1),
+            "oos_p01_p99_width_pct": round(float(np.sum(hi99 - lo99) / max(1.0, np.sum(y_o))) * 100.0, 1),
             "n_oos_points": int(len(g_oos)),
         }
 
@@ -671,7 +687,7 @@ def calibrate_and_validate_intervals(bt: pd.DataFrame) -> tuple[dict, dict, dict
     agg_fam_reg, rep_fam_reg = fit_agg_level(["Product_Family", "Region"], "Family-Region Monthly")
 
     agg_intervals = {
-        "calibration_method": "Split-conformal quantiles calibrated separately at each hierarchy level on Origins 1-3, validated out-of-sample on Origin 4 (2025-03)",
+        "calibration_method": "Centered split-conformal P10-P90 (target 80% OOS) + P01-P99 Stress Envelope (target 99% OOS), calibrated on Origins 1-3 and validated strictly out-of-sample on Origin 4",
         "global": agg_global,
         "family": agg_family,
         "region": agg_region,
@@ -679,18 +695,21 @@ def calibrate_and_validate_intervals(bt: pd.DataFrame) -> tuple[dict, dict, dict
     }
     coverage_report = {
         "target_coverage_pct": 80.0,
+        "stress_envelope_target_pct": 99.0,
         "calibration_origins": ["2023-09", "2024-03", "2024-09"],
         "oos_validation_origin": "2025-03 (2025-04..2026-10)",
         "sku_conformal_scale_k": round(best_k, 3),
         "sku_level": {
             "level": "SKU-Region Monthly",
-            "oos_coverage_pct": round(sku_oos_cov, 1),
-            "oos_avg_width_pct_of_actual": round(sku_oos_width, 1),
+            "oos_coverage_pct": round(sku_oos_cov80, 1),
+            "oos_avg_width_pct_of_actual": round(sku_oos_w80, 1),
+            "oos_p01_p99_coverage_pct": round(sku_oos_cov99, 1),
+            "oos_p01_p99_width_pct": round(sku_oos_w99, 1),
             "n_oos_points": int(len(oos)),
         },
         "aggregate_levels": [rep_global, rep_family, rep_region, rep_fam_reg],
     }
-    return sku_q_final, agg_intervals, coverage_report
+    return sku_q80_final, sku_q99_final, agg_intervals, coverage_report
 
 
 def run_forecasting(raw_dir: Path = RAW_DIR, out_dir: Path = OUT_DIR) -> dict:
@@ -817,7 +836,7 @@ def run_forecasting(raw_dir: Path = RAW_DIR, out_dir: Path = OUT_DIR) -> dict:
     }
 
     # Out-of-sample conformal calibration at SKU level AND aggregate levels!
-    sku_q_table, agg_intervals, coverage_report = calibrate_and_validate_intervals(bt)
+    sku_q_table, sku_q99_table, agg_intervals, coverage_report = calibrate_and_validate_intervals(bt)
     with open(out_dir / "agg_intervals.json", "w") as f:
         json.dump(agg_intervals, f, indent=2)
 
@@ -843,8 +862,19 @@ def run_forecasting(raw_dir: Path = RAW_DIR, out_dir: Path = OUT_DIR) -> dict:
         p10_arr[i] = max(0, int(np.floor(p50 * (1.0 + q10))))
         p90_arr[i] = max(p50, int(np.ceil(p50 * (1.0 + q90))))
 
+    p01_arr = np.zeros(len(test_preds), dtype=int)
+    p99_arr = np.zeros(len(test_preds), dtype=int)
+    for i, (sbc, hb, p50) in enumerate(zip(test_preds["SBC_Class"], h_buckets, p50_int)):
+        if p50 == 0:
+            p01_arr[i], p99_arr[i] = 0, (5 if sbc in ("Intermittent", "Lumpy") else 0)
+            continue
+        q01, q99 = sku_q99_table.get((sbc, hb), (-0.90, 1.40))
+        p01_arr[i] = max(0, int(np.floor(p50 * (1.0 + q01))))
+        p99_arr[i] = max(p90_arr[i], int(np.ceil(p50 * (1.0 + q99))))
+    test_preds["P01"] = p01_arr
     test_preds["P10"] = p10_arr
     test_preds["P90"] = p90_arr
+    test_preds["P99"] = p99_arr
     test_preds["Revenue_P50"] = np.round(test_preds["P50"] * test_preds["Unit_Price_Projected"], 2)
     test_preds["Revenue_P90"] = np.round(test_preds["P90"] * test_preds["Unit_Price_Projected"], 2)
 

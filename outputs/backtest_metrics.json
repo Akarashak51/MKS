@@ -412,6 +412,7 @@
   },
   "interval_calibration": {
     "target_coverage_pct": 80.0,
+    "stress_envelope_target_pct": 99.0,
     "calibration_origins": [
       "2023-09",
       "2024-03",
@@ -423,31 +424,41 @@
       "level": "SKU-Region Monthly",
       "oos_coverage_pct": 82.2,
       "oos_avg_width_pct_of_actual": 124.5,
+      "oos_p01_p99_coverage_pct": 99.3,
+      "oos_p01_p99_width_pct": 799.0,
       "n_oos_points": 57830
     },
     "aggregate_levels": [
       {
         "level": "Global Monthly Total",
-        "oos_coverage_pct": 73.7,
-        "oos_avg_width_pct_of_actual": 25.7,
+        "oos_coverage_pct": 100.0,
+        "oos_avg_width_pct_of_actual": 26.2,
+        "oos_p01_p99_coverage_pct": 100.0,
+        "oos_p01_p99_width_pct": 64.8,
         "n_oos_points": 19
       },
       {
         "level": "Product Family Monthly",
-        "oos_coverage_pct": 77.4,
-        "oos_avg_width_pct_of_actual": 39.6,
+        "oos_coverage_pct": 94.0,
+        "oos_avg_width_pct_of_actual": 34.3,
+        "oos_p01_p99_coverage_pct": 100.0,
+        "oos_p01_p99_width_pct": 110.5,
         "n_oos_points": 133
       },
       {
         "level": "Region Monthly",
-        "oos_coverage_pct": 71.1,
-        "oos_avg_width_pct_of_actual": 30.1,
+        "oos_coverage_pct": 91.2,
+        "oos_avg_width_pct_of_actual": 27.7,
+        "oos_p01_p99_coverage_pct": 100.0,
+        "oos_p01_p99_width_pct": 106.7,
         "n_oos_points": 114
       },
       {
         "level": "Family-Region Monthly",
-        "oos_coverage_pct": 81.0,
-        "oos_avg_width_pct_of_actual": 49.5,
+        "oos_coverage_pct": 91.2,
+        "oos_avg_width_pct_of_actual": 42.0,
+        "oos_p01_p99_coverage_pct": 100.0,
+        "oos_p01_p99_width_pct": 148.7,
         "n_oos_points": 798
       }
     ]
@@ -485,11 +496,11 @@
   },
   "forecast_headline": {
     "total_rows": 58219,
-    "total_p10_units_global_calibrated": 2534412,
+    "total_p10_units_global_calibrated": 2292945,
     "total_p50_units": 2632847,
-    "total_p90_units_global_calibrated": 3199712,
+    "total_p90_units_global_calibrated": 2972749,
     "total_p50_revenue_usd": 2366708477.64,
-    "total_p90_revenue_usd_global_calibrated": 2878300224.07,
+    "total_p90_revenue_usd_global_calibrated": 2672250542.1,
     "sku_sum_p90_units_for_sku_level_buffer": 4415502
   }
 }
